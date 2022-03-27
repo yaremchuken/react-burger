@@ -1,4 +1,6 @@
 import { ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
+import { IngredientType } from '../../utils/types';
 import styles from './burger-constructor.module.css';
 
 const BurgerConstructor = (props) => {
@@ -60,6 +62,8 @@ const mapIngredient = (ingredient, idx) => {
   );
 };
 
-// BurgerConstructor.propTypes = {};
+BurgerConstructor.propTypes = {
+  composition: PropTypes.arrayOf(IngredientType),
+};
 
 export default BurgerConstructor;
