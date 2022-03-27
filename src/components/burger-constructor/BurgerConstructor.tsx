@@ -4,6 +4,6 @@ const BurgerConstructor = () => {
   return <div className="burger-constructor"></div>;
 };
 
-BurgerConstructor.propTypess = {};
+BurgerConstructor.propTypes = {};
 
 export default BurgerConstructor;
