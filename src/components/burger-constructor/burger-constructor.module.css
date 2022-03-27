@@ -4,8 +4,8 @@
 }
 
 .ingredientList {
-  margin: 0;
-  padding: 16px 0;
+  margin: 16px 0;
+  padding: 0;
 
   max-height: calc(100vh - 590px);
   overflow-y: auto;
@@ -14,6 +14,20 @@
   flex-direction: column;
   gap: 16px;
   list-style-type: none;
+
+  scrollbar-color: #8585ad #2f2f37;
+}
+
+.ingredientList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ingredientList::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.ingredientList::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
 }
 
 .ingredientElement {
