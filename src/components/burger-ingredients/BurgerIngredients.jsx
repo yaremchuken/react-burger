@@ -1,10 +1,15 @@
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState } from 'react';
 import styles from './burger-ingredients.module.css';
-import { data } from '../../utils/data';
 
-const BurgerIngredients = () => {
+const BurgerIngredients = (props) => {
   const [current, setCurrent] = useState('buns');
+
+  const types = [
+    { key: 'bun', name: 'Булки' },
+    { key: 'sauce', name: 'Соусы' },
+    { key: 'main', name: 'Начинки' },
+  ];
 
   return (
     <section className={styles.burgerIngredients}>
@@ -21,42 +26,27 @@ const BurgerIngredients = () => {
         </Tab>
       </div>
       <div className={styles.ingredientList}>
-        {getIngredientSection(
-          data.filter((d) => d.type === 'bun'),
-          'Булки'
-        )}
-
-        {getIngredientSection(
-          data.filter((d) => d.type === 'sauce'),
-          'Соусы'
-        )}
-
-        {getIngredientSection(
-          data.filter((d) => d.type === 'main'),
-          'Начинки'
+        {types.map((type) =>
+          toIngredientsSection(
+            props.ingredients.filter((d) => d.type === type.key),
+            type.name
+          )
         )}
       </div>
     </section>
   );
 };
 
-type Ingredient = {
-  _id: string;
-  name: string;
-  image: string;
-  price: number;
-};
-
-const getIngredientSection = (ingredients: Ingredient[], name: string) => {
+const toIngredientsSection = (ingredients, name) => {
   return (
     <div className={`${styles.ingredientSection} pt-10`} key={name}>
       <p className={`${styles.ingredientType} text text_type_main-medium`}>{name}</p>
-      <ul className={styles.ingredients}>{ingredients.map((i) => getIngredientCard(i, 0))}</ul>
+      <ul className={styles.ingredients}>{ingredients.map((i) => toIngredientCard(i, 0))}</ul>
     </div>
   );
 };
 
-const getIngredientCard = ({ _id, name, image, price }: Ingredient, count: number) => {
+const toIngredientCard = ({ _id, name, image, price }, count) => {
   return (
     <li className={styles.ingredient} key={_id}>
       {count > 0 && <Counter count={count} size="default" />}
@@ -69,6 +59,6 @@ const getIngredientCard = ({ _id, name, image, price }: Ingredient, count: numbe
   );
 };
 
-BurgerIngredients.propTypess = {};
+// BurgerIngredients.propTypes = {};
 
 export default BurgerIngredients;

@@ -1,0 +1,49 @@
+.burgerConstructor {
+  display: flex;
+  flex-direction: column;
+}
+
+.ingredientList {
+  margin: 0;
+  padding: 16px 0;
+
+  max-height: calc(100vh - 590px);
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style-type: none;
+}
+
+.ingredientElement {
+  display: flex;
+  align-items: center;
+}
+
+.dragElement {
+  width: 50px;
+}
+
+.order {
+  padding-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 40px;
+}
+
+.orderTotal {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.orderButton {
+  cursor: pointer;
+  padding: 20px 40px;
+  background: linear-gradient(63.18deg, #801ab3 0%, #4c4cff 100%);
+  border: none;
+  border-radius: 64px;
+  outline: none;
+  color: #f2f2f3;
+}
