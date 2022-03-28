@@ -16,7 +16,7 @@
   padding: 0;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   list-style-type: none;
 }
 
@@ -25,22 +25,23 @@
   gap: 8px;
   text-align: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .leftBar {
-  grid-column: 1;
+  grid-column: 1 / span 2;
   grid-row: 1;
   display: flex;
 }
 
 .centerBar {
-  grid-column: 2;
+  grid-column: 3;
   display: flex;
   justify-content: center;
 }
 
 .rightBar {
-  grid-column: 3;
+  grid-column: 5;
   justify-self: flex-end;
 }
 
