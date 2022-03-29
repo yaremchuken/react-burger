@@ -65,7 +65,7 @@ const toIngredientCard = ({ _id, name, image, price }, count) => {
 };
 
 BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(IngredientType),
+  ingredients: PropTypes.arrayOf(IngredientType).isRequired,
 };
 
 export default BurgerIngredients;

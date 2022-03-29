@@ -14,7 +14,13 @@ const BurgerConstructor = (props) => {
     <section className={`${styles.burgerConstructor} pt-15`}>
       <div className={styles.ingredientElement} key={0}>
         <div className={styles.dragElement}></div>
-        <ConstructorElement type={'top'} isLocked={true} text={top.name} price={top.price} thumbnail={top.image} />
+        <ConstructorElement
+          type={'top'}
+          isLocked={true}
+          text={`${top.name} (верх)`}
+          price={top.price}
+          thumbnail={top.image}
+        />
       </div>
 
       <ul className={styles.ingredientList}>
@@ -28,7 +34,7 @@ const BurgerConstructor = (props) => {
         <ConstructorElement
           type={'bottom'}
           isLocked={true}
-          text={bottom.name}
+          text={`${bottom.name} (низ)`}
           price={bottom.price}
           thumbnail={bottom.image}
         />
@@ -63,7 +69,7 @@ const mapIngredient = (ingredient, idx) => {
 };
 
 BurgerConstructor.propTypes = {
-  composition: PropTypes.arrayOf(IngredientType),
+  composition: PropTypes.arrayOf(IngredientType).isRequired,
 };
 
 export default BurgerConstructor;
