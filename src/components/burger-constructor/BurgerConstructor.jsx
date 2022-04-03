@@ -44,7 +44,7 @@ const BurgerConstructor = (props) => {
           <p className="text text_type_digits-medium">{total}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <button className={styles.orderButton}>
+        <button onClick={props.orderClickHandler} className={styles.orderButton}>
           <span className="text text_type_main-small">Оформить заказ</span>
         </button>
       </div>
@@ -70,6 +70,7 @@ const mapIngredient = (ingredient, idx) => {
 
 BurgerConstructor.propTypes = {
   composition: PropTypes.arrayOf(IngredientType).isRequired,
+  orderClickHandler: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;

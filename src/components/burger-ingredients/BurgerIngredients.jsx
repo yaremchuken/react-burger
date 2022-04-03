@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { IngredientType } from '../../utils/types';
 import styles from './burger-ingredients.module.css';
 
+const types = [
+  { key: 'bun', name: 'Булки' },
+  { key: 'sauce', name: 'Соусы' },
+  { key: 'main', name: 'Начинки' },
+];
+
 const BurgerIngredients = (props) => {
   const [current, setCurrent] = useState('buns');
-
-  const types = [
-    { key: 'bun', name: 'Булки' },
-    { key: 'sauce', name: 'Соусы' },
-    { key: 'main', name: 'Начинки' },
-  ];
 
   return (
     <section className={styles.burgerIngredients}>
@@ -31,7 +31,8 @@ const BurgerIngredients = (props) => {
         {types.map((type) =>
           toIngredientsSection(
             props.ingredients.filter((d) => d.type === type.key),
-            type.name
+            type.name,
+            props.ingredientClickHandler
           )
         )}
       </div>
@@ -39,18 +40,18 @@ const BurgerIngredients = (props) => {
   );
 };
 
-const toIngredientsSection = (ingredients, name) => {
+const toIngredientsSection = (ingredients, name, clickHandler) => {
   return (
     <div className={`${styles.ingredientSection} pt-10`} key={name}>
       <p className={`${styles.ingredientType} text text_type_main-medium`}>{name}</p>
-      <ul className={styles.ingredients}>{ingredients.map((i) => toIngredientCard(i, 0))}</ul>
+      <ul className={styles.ingredients}>{ingredients.map((i) => toIngredientCard(i, clickHandler, 0))}</ul>
     </div>
   );
 };
 
-const toIngredientCard = ({ _id, name, image, price }, count) => {
+const toIngredientCard = ({ _id, name, image, price }, clickHandler, count) => {
   return (
-    <li className={styles.ingredient} key={_id}>
+    <li className={styles.ingredient} key={_id} onClick={() => clickHandler(_id)}>
       {count > 0 && <Counter count={count} size="default" />}
       <img className={styles.ingredientImage} src={image} alt={name} />
       <p className={`${styles.ingredientPrice} text text_type_digits-default`}>
@@ -66,6 +67,7 @@ const toIngredientCard = ({ _id, name, image, price }, count) => {
 
 BurgerIngredients.propTypes = {
   ingredients: PropTypes.arrayOf(IngredientType).isRequired,
+  ingredientClickHandler: PropTypes.func.isRequired,
 };
 
 export default BurgerIngredients;
