@@ -51,21 +51,21 @@ const App = () => {
     return <Loader message={error} />;
   }
 
-  if (ingredients.length === 0) {
-    return <Loader message={'Loading our spacy ingredients...'} />;
-  }
-
   return (
     <div className={styles.app}>
       <AppHeader />
 
-      <div className={styles.main}>
-        <BurgerIngredients ingredients={ingredients} ingredientClickHandler={onIngredientChoose} />
-        <BurgerConstructor
-          composition={initialBurger.map((id) => ingredients.find((i) => i._id === id))}
-          orderClickHandler={onOrderAssume}
-        />
-      </div>
+      {ingredients.length === 0 ? (
+        <Loader message={'Loading our spacy ingredients...'} />
+      ) : (
+        <div className={styles.main}>
+          <BurgerIngredients ingredients={ingredients} ingredientClickHandler={onIngredientChoose} />
+          <BurgerConstructor
+            composition={initialBurger.map((id) => ingredients.find((i) => i._id === id))}
+            orderClickHandler={onOrderAssume}
+          />
+        </div>
+      )}
 
       {orderNumber && (
         <Modal title="Детали заказа" onCloseDemand={closeModals} onKeydown={handleEscKeydown}>
