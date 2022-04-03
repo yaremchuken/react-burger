@@ -52,7 +52,7 @@ const App = () => {
   }
 
   if (ingredients.length === 0) {
-    return <Loader message={'Loading spacy ingredients...'} />;
+    return <Loader message={'Loading our spacy ingredients...'} />;
   }
 
   return (
