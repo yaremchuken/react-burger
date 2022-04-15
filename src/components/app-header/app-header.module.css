@@ -1,0 +1,53 @@
+.header {
+  display: flex;
+  justify-content: center;
+  background-color: #1c1c21;
+}
+
+.navbar {
+  margin: 0;
+  padding: 0;
+  min-height: 88px;
+  max-width: 1280px;
+  display: flex;
+}
+
+.navbarList {
+  padding: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  list-style-type: none;
+}
+
+.navbarElement {
+  display: flex;
+  gap: 8px;
+  text-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.leftBar {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+  display: flex;
+}
+
+.centerBar {
+  grid-column: 3;
+  display: flex;
+  justify-content: center;
+}
+
+.rightBar {
+  grid-column: 5;
+  justify-self: flex-end;
+}
+
+.twoListBar {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
