@@ -18,15 +18,23 @@ const BurgerIngredients = (props) => {
     <section className={styles.burgerIngredients}>
       <h1 className={`${styles.heading} text text_type_main-large pb-5`}>Соберите бургер</h1>
       <div className={styles.ingredientTypes}>
-        <Tab value="buns" active={current === 'buns'} onClick={setCurrent}>
-          Булки
-        </Tab>
-        <Tab value="sauces" active={current === 'sauces'} onClick={setCurrent}>
-          Соусы
-        </Tab>
-        <Tab value="mains" active={current === 'mains'} onClick={setCurrent}>
-          Начинки
-        </Tab>
+        <a className={styles.tabLink} href="#Булки">
+          <Tab value="buns" active={current === 'buns'} onClick={setCurrent}>
+            Булки
+          </Tab>
+        </a>
+
+        <a className={styles.tabLink} href="#Соусы">
+          <Tab value="sauces" active={current === 'sauces'} onClick={setCurrent}>
+            Соусы
+          </Tab>
+        </a>
+
+        <a className={styles.tabLink} href="#Начинки">
+          <Tab value="mains" active={current === 'mains'} onClick={setCurrent}>
+            Начинки
+          </Tab>
+        </a>
       </div>
       <div className={styles.ingredientList}>
         {types.map((type) =>
@@ -43,7 +51,7 @@ const BurgerIngredients = (props) => {
 
 const toIngredientsSection = (ingredients, name, clickHandler) => {
   return (
-    <div className={`${styles.ingredientSection} pt-10`} key={name}>
+    <div className={`${styles.ingredientSection} pt-10`} key={name} id={name}>
       <p className={`${styles.ingredientType} text text_type_main-medium`}>{name}</p>
       <ul className={styles.ingredients}>{ingredients.map((i) => toIngredientCard(i, clickHandler, 0))}</ul>
     </div>
