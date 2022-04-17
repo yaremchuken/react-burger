@@ -1,14 +1,55 @@
 import { ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { IngredientType } from '../../utils/types';
+import { useCallback, useContext, useEffect } from 'react';
+import { BurgerContext } from '../../services/BurgerContext';
+import { IngredientsContext } from '../../services/IngredientsContext';
+import { ActionType } from '../../utils/enums';
+import { random } from '../../utils/utils';
 import styles from './burger-constructor.module.css';
 
 const BurgerConstructor = (props) => {
-  const composition = props.composition;
-  const top = composition[0];
-  const bottom = composition[composition.length - 1];
+  const { ingredients } = useContext(IngredientsContext);
+  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
 
-  const total = composition.reduce((sum, i) => sum + i.price, 0);
+  const addIngredient = useCallback(
+    (ingredient) => {
+      burgerDispatcher({ type: ActionType.ADD_INGREDIENT, payload: ingredient });
+    },
+    [burgerDispatcher]
+  );
+
+  const removeIngredient = useCallback(
+    (ingredient) => {
+      burgerDispatcher({ type: ActionType.REMOVE_INGREDIENT, payload: ingredient });
+    },
+    [burgerDispatcher]
+  );
+
+  // При отсутствии ингредиентов (кроме булки) создаём рандомный бургер для проверки функционала.
+  useEffect(() => {
+    if (burgerState.composition.length === 1) {
+      const ingredientsbyType = ingredients.reduce(
+        (res, current) => {
+          res[current.type].push(current);
+          return res;
+        },
+        {
+          bun: [],
+          sauce: [],
+          main: [],
+        }
+      );
+
+      addIngredient(random(ingredientsbyType.sauce));
+      addIngredient(random(ingredientsbyType.main));
+      addIngredient(random(ingredientsbyType.main));
+      addIngredient(random(ingredientsbyType.main));
+      addIngredient(random(ingredientsbyType.sauce));
+    }
+  });
+
+  const composition = burgerState.composition.map((id) => ingredients.find((ing) => ing._id === id));
+  const bun = composition[0];
 
   return (
     <section className={`${styles.burgerConstructor} pt-15`}>
@@ -17,31 +58,31 @@ const BurgerConstructor = (props) => {
         <ConstructorElement
           type={'top'}
           isLocked={true}
-          text={`${top.name} (верх)`}
-          price={top.price}
-          thumbnail={top.image}
+          text={`${bun.name} (верх)`}
+          price={bun.price}
+          thumbnail={bun.image}
         />
       </div>
 
       <ul className={styles.ingredientList}>
         {composition
-          .filter((_, idx) => idx > 0 && idx < composition.length - 1)
-          .map((ingredient, idx) => mapIngredient(ingredient, idx))}
+          .slice(1)
+          .map((ingredient, idx) => mapIngredient(ingredient, idx, () => removeIngredient(ingredient)))}
       </ul>
 
-      <div className={styles.ingredientElement} key={composition.length - 1}>
+      <div className={styles.ingredientElement} key={composition.length}>
         <div className={styles.dragElement}></div>
         <ConstructorElement
           type={'bottom'}
           isLocked={true}
-          text={`${bottom.name} (низ)`}
-          price={bottom.price}
-          thumbnail={bottom.image}
+          text={`${bun.name} (низ)`}
+          price={bun.price}
+          thumbnail={bun.image}
         />
       </div>
       <div className={styles.order}>
         <div className={styles.orderTotal}>
-          <p className="text text_type_digits-medium">{total}</p>
+          <p className="text text_type_digits-medium">{burgerState.price}</p>
           <CurrencyIcon type="primary" />
         </div>
         <button onClick={props.orderClickHandler} className={styles.orderButton}>
@@ -52,7 +93,7 @@ const BurgerConstructor = (props) => {
   );
 };
 
-const mapIngredient = (ingredient, idx) => {
+const mapIngredient = (ingredient, idx, closeHandler) => {
   return (
     <li className={styles.ingredientElement} key={idx}>
       <div className={styles.dragElement}>
@@ -63,13 +104,13 @@ const mapIngredient = (ingredient, idx) => {
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
+        handleClose={closeHandler}
       />
     </li>
   );
 };
 
 BurgerConstructor.propTypes = {
-  composition: PropTypes.arrayOf(IngredientType).isRequired,
   orderClickHandler: PropTypes.func.isRequired,
 };
 

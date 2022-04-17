@@ -1,7 +1,7 @@
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { IngredientType } from '../../utils/types';
+import { useContext, useState } from 'react';
+import { IngredientsContext } from '../../services/IngredientsContext';
 import styles from './burger-ingredients.module.css';
 
 const types = [
@@ -11,6 +11,7 @@ const types = [
 ];
 
 const BurgerIngredients = (props) => {
+  const { ingredients } = useContext(IngredientsContext);
   const [current, setCurrent] = useState('buns');
 
   return (
@@ -30,7 +31,7 @@ const BurgerIngredients = (props) => {
       <div className={styles.ingredientList}>
         {types.map((type) =>
           toIngredientsSection(
-            props.ingredients.filter((d) => d.type === type.key),
+            ingredients.filter((d) => d.type === type.key),
             type.name,
             props.ingredientClickHandler
           )
@@ -66,7 +67,6 @@ const toIngredientCard = ({ _id, name, image, price }, clickHandler, count) => {
 };
 
 BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(IngredientType).isRequired,
   ingredientClickHandler: PropTypes.func.isRequired,
 };
 
