@@ -1,7 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { BurgerContext } from '../../services/BurgerContext';
 import { IngredientsContext } from '../../services/IngredientsContext';
+import { API_URL, INGREDIENTS_PATH, ORDERS_PATH } from '../../utils/constants';
 import { ActionType } from '../../utils/enums';
+import { request } from '../../utils/utils';
 import AppHeader from '../app-header/AppHeader';
 import BurgerConstructor from '../burger-constructor/BurgerConstructor';
 import BurgerIngredients from '../burger-ingredients/BurgerIngredients';
@@ -10,8 +12,6 @@ import Loader from '../loader/Loader';
 import Modal from '../modal/Modal';
 import OrderDetails from '../order-details/OrderDetails';
 import styles from './app.module.css';
-
-const apiPath = 'https://norma.nomoreparties.space/api';
 
 const initialBurger = {
   composition: ['60d3b41abdacab0026a733c6'],
@@ -45,31 +45,21 @@ const App = () => {
   const [chosenIngredient, setChosenIngredient] = useState();
   const [orderNumber, setOrderNumber] = useState();
 
-  const [burgerState, burgerDispatcher] = useReducer(reducer, initialBurger, undefined);
+  const [burgerState, burgerDispatcher] = useReducer(reducer, initialBurger);
 
   const [error, setError] = useState();
   const [loaderMsg, setLoaderMsg] = useState('Загружаем список ингредиентов');
 
   useEffect(() => {
-    fetch(`${apiPath}/ingredients`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) {
-          throw new Error(`Что-то пошло не так, данные не валидны ${JSON.stringify(data)}`);
-        }
-        setIngredients(data.data);
-        setLoaderMsg();
-      })
-      .catch((err) => setError(err.message));
+    request(`${API_URL}${INGREDIENTS_PATH}`)
+      .then((data) => setIngredients(data.data))
+      .catch((err) => setError(err.message))
+      .finally(setLoaderMsg);
   }, []);
 
   const closeModals = () => {
-    setOrderNumber(undefined);
-    setChosenIngredient(undefined);
-  };
-
-  const handleEscKeydown = (event) => {
-    event.key === 'Escape' && closeModals();
+    setOrderNumber();
+    setChosenIngredient();
   };
 
   const onIngredientChoose = (id) => {
@@ -78,23 +68,10 @@ const App = () => {
 
   const onOrderAssume = () => {
     setLoaderMsg('Мы начали обработку заказа');
-    fetch(`${apiPath}/orders`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ingredients: [...burgerState.composition, burgerState.composition[0]] }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) {
-          throw new Error(`Что-то пошло не так, данные не валидны ${JSON.stringify(data)}`);
-        }
-        setOrderNumber(data.order.number);
-        setLoaderMsg();
-      })
-      .catch((err) => setError(err.message));
+    request(`${API_URL}${ORDERS_PATH}`, { ingredients: [...burgerState.composition, burgerState.composition[0]] })
+      .then((data) => setOrderNumber(data.order.number))
+      .catch((err) => setError(err.message))
+      .finally(setLoaderMsg);
   };
 
   if (error) {
@@ -121,13 +98,13 @@ const App = () => {
           )}
 
           {orderNumber && (
-            <Modal title="Детали заказа" onCloseDemand={closeModals} onKeydown={handleEscKeydown}>
+            <Modal title="Детали заказа" onCloseDemand={closeModals}>
               <OrderDetails orderNum={orderNumber} />
             </Modal>
           )}
 
           {chosenIngredient && (
-            <Modal title="Детали ингредиента" onCloseDemand={closeModals} onKeydown={handleEscKeydown}>
+            <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
               <IngredientDetails ingredient={chosenIngredient} />
             </Modal>
           )}
