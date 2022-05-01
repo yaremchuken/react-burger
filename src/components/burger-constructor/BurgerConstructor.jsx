@@ -1,33 +1,32 @@
 import { ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { useCallback, useContext, useEffect } from 'react';
-import { BurgerContext } from '../../services/BurgerContext';
-import { IngredientsContext } from '../../services/IngredientsContext';
-import { ActionType } from '../../utils/enums';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ADD_INGREDIENT, REMOVE_INGREDIENT } from '../../services/actions/burger';
+import { takeOrder } from '../../services/actions/order';
 import { random } from '../../utils/utils';
 import styles from './burger-constructor.module.css';
 
-const BurgerConstructor = (props) => {
-  const { ingredients } = useContext(IngredientsContext);
-  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
 
-  const addIngredient = useCallback(
-    (ingredient) => {
-      burgerDispatcher({ type: ActionType.ADD_INGREDIENT, payload: ingredient });
-    },
-    [burgerDispatcher]
-  );
+  const { ingredients } = useSelector((store) => store.ingredients);
+  const { composition, price } = useSelector((store) => store.burger);
 
-  const removeIngredient = useCallback(
-    (ingredient) => {
-      burgerDispatcher({ type: ActionType.REMOVE_INGREDIENT, payload: ingredient });
-    },
-    [burgerDispatcher]
-  );
+  const addIngredient = (ingredient) => {
+    dispatch({ type: ADD_INGREDIENT, id: ingredient._id, price: ingredient.price });
+  };
+
+  const removeIngredient = (ingredient) => {
+    dispatch({ type: REMOVE_INGREDIENT, id: ingredient._id, price: ingredient.price });
+  };
+
+  const orderHandler = () => {
+    dispatch(takeOrder([...composition, composition[0]]));
+  };
 
   // При отсутствии ингредиентов (кроме булки) создаём рандомный бургер для проверки функционала.
   useEffect(() => {
-    if (burgerState.composition.length === 1) {
+    if (composition.length === 1) {
       const ingredientsbyType = ingredients.reduce(
         (res, current) => {
           res[current.type].push(current);
@@ -48,8 +47,8 @@ const BurgerConstructor = (props) => {
     }
   });
 
-  const composition = burgerState.composition.map((id) => ingredients.find((ing) => ing._id === id));
-  const bun = composition[0];
+  const burger = composition.map((id) => ingredients.find((ing) => ing._id === id));
+  const bun = burger[0];
 
   return (
     <section className={`${styles.burgerConstructor} pt-15`}>
@@ -65,12 +64,10 @@ const BurgerConstructor = (props) => {
       </div>
 
       <ul className={styles.ingredientList}>
-        {composition
-          .slice(1)
-          .map((ingredient, idx) => mapIngredient(ingredient, idx, () => removeIngredient(ingredient)))}
+        {burger.slice(1).map((ingredient, idx) => mapIngredient(ingredient, idx, () => removeIngredient(ingredient)))}
       </ul>
 
-      <div className={styles.ingredientElement} key={composition.length}>
+      <div className={styles.ingredientElement} key={burger.length}>
         <div className={styles.dragElement}></div>
         <ConstructorElement
           type={'bottom'}
@@ -80,12 +77,13 @@ const BurgerConstructor = (props) => {
           thumbnail={bun.image}
         />
       </div>
+
       <div className={styles.order}>
         <div className={styles.orderTotal}>
-          <p className="text text_type_digits-medium">{burgerState.price}</p>
+          <p className="text text_type_digits-medium">{price}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <button onClick={props.orderClickHandler} className={styles.orderButton}>
+        <button onClick={orderHandler} className={styles.orderButton}>
           <span className="text text_type_main-small">Оформить заказ</span>
         </button>
       </div>
@@ -108,10 +106,6 @@ const mapIngredient = (ingredient, idx, closeHandler) => {
       />
     </li>
   );
-};
-
-BurgerConstructor.propTypes = {
-  orderClickHandler: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;

@@ -1,7 +1,7 @@
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { useContext, useState } from 'react';
-import { IngredientsContext } from '../../services/IngredientsContext';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { CHOOSE_INGREDIENT } from '../../services/actions/ingredients';
 import styles from './burger-ingredients.module.css';
 
 const types = [
@@ -10,9 +10,16 @@ const types = [
   { key: 'main', name: 'Начинки' },
 ];
 
-const BurgerIngredients = (props) => {
-  const { ingredients } = useContext(IngredientsContext);
+const BurgerIngredients = () => {
+  const dispatch = useDispatch();
+
+  const { ingredients } = useSelector((store) => store.ingredients);
+
   const [current, setCurrent] = useState('buns');
+
+  const onIngredientChoose = (id) => {
+    dispatch({ type: CHOOSE_INGREDIENT, ingredient: ingredients.find((i) => i._id === id) });
+  };
 
   return (
     <section className={styles.burgerIngredients}>
@@ -41,7 +48,7 @@ const BurgerIngredients = (props) => {
           toIngredientsSection(
             ingredients.filter((d) => d.type === type.key),
             type.name,
-            props.ingredientClickHandler
+            onIngredientChoose
           )
         )}
       </div>
@@ -72,10 +79,6 @@ const toIngredientCard = ({ _id, name, image, price }, clickHandler, count) => {
       <p className={`text text_type_main-default`}>{name}</p>
     </li>
   );
-};
-
-BurgerIngredients.propTypes = {
-  ingredientClickHandler: PropTypes.func.isRequired,
 };
 
 export default BurgerIngredients;
