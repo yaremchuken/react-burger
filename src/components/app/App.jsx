@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
 import { CHOOSE_INGREDIENT, getIngredients } from '../../services/actions/ingredients';
 import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
@@ -39,13 +41,15 @@ const App = () => {
       {ingredientsRequested ? (
         <Loader message={'Загружаем список ингредиентов'} />
       ) : orderRequested ? (
-        <Loader message={'Обрабаиываем Ваш заказ'} />
+        <Loader message={'Обрабатываем Ваш заказ'} />
       ) : (
         <>
           {ingredients.length > 0 && (
             <div className={styles.main}>
-              <BurgerIngredients />
-              <BurgerConstructor />
+              <DndProvider backend={HTML5Backend}>
+                <BurgerIngredients />
+                <BurgerConstructor />
+              </DndProvider>
             </div>
           )}
 

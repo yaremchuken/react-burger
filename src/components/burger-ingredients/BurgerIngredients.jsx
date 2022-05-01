@@ -1,7 +1,8 @@
-import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CHOOSE_INGREDIENT } from '../../services/actions/ingredients';
+import IngredientCard from '../ingredient-card/IngredientCard';
 import styles from './burger-ingredients.module.css';
 
 const types = [
@@ -87,24 +88,12 @@ const toIngredientsSection = (ingredients, name, clickHandler, ref) => {
   return (
     <div className={`${styles.ingredientSection} pt-10`} key={name} id={name} ref={ref}>
       <p className={`${styles.ingredientType} text text_type_main-medium`}>{name}</p>
-      <ul className={styles.ingredients}>{ingredients.map((i) => toIngredientCard(i, clickHandler, 0))}</ul>
+      <ul className={styles.ingredients}>
+        {ingredients.map((i) => (
+          <IngredientCard key={i._id} ingredient={i} clickHandler={clickHandler} />
+        ))}
+      </ul>
     </div>
-  );
-};
-
-const toIngredientCard = ({ _id, name, image, price }, clickHandler, count) => {
-  return (
-    <li className={styles.ingredient} key={_id} onClick={() => clickHandler(_id)}>
-      {count > 0 && <Counter count={count} size="default" />}
-      <img className={styles.ingredientImage} src={image} alt={name} />
-      <p className={`${styles.ingredientPrice} text text_type_digits-default`}>
-        {price}{' '}
-        <span className={styles.currency}>
-          <CurrencyIcon type="primary" />
-        </span>
-      </p>
-      <p className={`text text_type_main-default`}>{name}</p>
-    </li>
   );
 };
 
