@@ -1,5 +1,5 @@
 import { uniqueIdProvider } from '../../utils/utils';
-import { ADD_INGREDIENT, REMOVE_INGREDIENT } from '../actions/burger';
+import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../actions/burger';
 
 const initialState = {
   composition: [],
@@ -30,6 +30,17 @@ export const burgerReducer = (state = initialState, action) => {
         ...state,
         composition,
         price: totalPrice(composition),
+      };
+
+    case SORT_INGREDIENTS:
+      const { idxFrom, idxTo } = action;
+
+      const sorted = composition.splice(idxFrom, 1)[0];
+      composition = [...composition.slice(0, idxTo), sorted, ...composition.slice(idxTo)];
+
+      return {
+        ...state,
+        composition,
       };
 
     default:

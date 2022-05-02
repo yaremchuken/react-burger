@@ -1,10 +1,11 @@
-import { ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { ADD_INGREDIENT, REMOVE_INGREDIENT } from '../../services/actions/burger';
+import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../../services/actions/burger';
 import { takeOrder } from '../../services/actions/order';
 import { random } from '../../utils/utils';
+import BurgerIngredient from '../burger-ingredient/BurgerIngredient';
 import Loader from '../loader/Loader';
 import styles from './burger-constructor.module.css';
 
@@ -12,7 +13,7 @@ const BurgerConstructor = () => {
   const dispatch = useDispatch();
 
   const { ingredients } = useSelector((store) => store.ingredients);
-  const { composition, price } = useSelector((store) => store.burger);
+  const { composition, price, draggedIngredient } = useSelector((store) => store.burger);
 
   const addIngredient = (id) => {
     const ingredient = ingredients.find((i) => i._id === id);
@@ -28,10 +29,14 @@ const BurgerConstructor = () => {
     dispatch(takeOrder([...ids, ids[0]]));
   };
 
+  const sortIngredients = (dragIdx, dropIdx) => {
+    dispatch({ type: SORT_INGREDIENTS, idxFrom: dragIdx, idxTo: dropIdx });
+  };
+
   const [{ opacity }, target] = useDrop({
     accept: 'ingredient',
-    drop(id) {
-      addIngredient(id._id);
+    drop(entity) {
+      addIngredient(entity.id);
     },
     collect: (monitor) => ({
       opacity: monitor.isOver() ? 0.7 : 1,
@@ -67,33 +72,24 @@ const BurgerConstructor = () => {
 
   return (
     <section className={`${styles.burgerConstructor} pt-15`} ref={target} style={{ opacity }}>
-      <div className={styles.ingredientElement} key={0}>
-        <div className={styles.dragElement}></div>
-        <ConstructorElement
-          type={'top'}
-          isLocked={true}
-          text={`${bun.name} (верх)`}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </div>
+      <BurgerIngredient key={-1} ingredient={bun} idx={0} closeHandler={() => {}} />
 
       <ul className={styles.ingredientList}>
         {composition
           .slice(1)
-          .map((ingredient, idx) => mapIngredient(ingredient, idx, () => removeIngredient(ingredient)))}
+          .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
+          .map((ingredient, idx) => (
+            <BurgerIngredient
+              key={ingredient.uniqueId}
+              ingredient={ingredient}
+              idx={idx}
+              closeHandler={() => removeIngredient(ingredient)}
+              sortHandler={sortIngredients}
+            />
+          ))}
       </ul>
 
-      <div className={styles.ingredientElement} key={composition.length}>
-        <div className={styles.dragElement}></div>
-        <ConstructorElement
-          type={'bottom'}
-          isLocked={true}
-          text={`${bun.name} (низ)`}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </div>
+      <BurgerIngredient key={-2} ingredient={bun} idx={composition.length} closeHandler={() => {}} />
 
       <div className={styles.order}>
         <div className={styles.orderTotal}>
@@ -105,23 +101,6 @@ const BurgerConstructor = () => {
         </button>
       </div>
     </section>
-  );
-};
-
-const mapIngredient = (ingredient, idx, closeHandler) => {
-  return (
-    <li className={styles.ingredientElement} key={idx}>
-      <div className={styles.dragElement}>
-        <DragIcon type="primary" />
-      </div>
-      <ConstructorElement
-        isLocked={false}
-        text={ingredient.name}
-        price={ingredient.price}
-        thumbnail={ingredient.image}
-        handleClose={closeHandler}
-      />
-    </li>
   );
 };
 

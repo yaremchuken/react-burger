@@ -30,15 +30,6 @@
   background-color: #8585ad;
 }
 
-.ingredientElement {
-  display: flex;
-  align-items: center;
-}
-
-.dragElement {
-  width: 50px;
-}
-
 .order {
   padding-top: 40px;
   display: flex;
