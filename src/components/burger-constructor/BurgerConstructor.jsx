@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../../services/actions/burger';
 import { takeOrder } from '../../services/actions/order';
-import { random } from '../../utils/utils';
+import { random, uniqueIdProvider } from '../../utils/utils';
 import BurgerIngredient from '../burger-ingredient/BurgerIngredient';
 import Loader from '../loader/Loader';
 import styles from './burger-constructor.module.css';
@@ -17,7 +17,7 @@ const BurgerConstructor = () => {
 
   const addIngredient = (id) => {
     const ingredient = ingredients.find((i) => i._id === id);
-    dispatch({ type: ADD_INGREDIENT, ingredient });
+    dispatch({ type: ADD_INGREDIENT, ingredient: { ...ingredient, uniqueId: uniqueIdProvider() } });
   };
 
   const removeIngredient = (ingredient) => {

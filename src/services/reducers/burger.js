@@ -1,4 +1,3 @@
-import { uniqueIdProvider } from '../../utils/utils';
 import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../actions/burger';
 
 const initialState = {
@@ -15,7 +14,7 @@ export const burgerReducer = (state = initialState, action) => {
       if (ingredient.type === 'bun') {
         composition[0] = ingredient;
       } else {
-        composition.push({ ...ingredient, uniqueId: uniqueIdProvider() });
+        composition.push(ingredient);
       }
 
       return {

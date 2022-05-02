@@ -12,17 +12,19 @@ export const getIngredients = () => {
       type: GET_INGREDIENTS_REQUEST,
     });
 
-    fetchIngredients().then((res) => {
-      if (res && res.success) {
-        dispatch({
-          type: GET_INGREDIENTS_SUCCESS,
-          ingredients: res.data,
-        });
-      } else {
-        dispatch({
-          type: GET_INGREDIENTS_FAILED,
-        });
-      }
-    });
+    fetchIngredients()
+      .then((res) => {
+        if (res && res.success) {
+          dispatch({
+            type: GET_INGREDIENTS_SUCCESS,
+            ingredients: res.data,
+          });
+        } else {
+          dispatch({
+            type: GET_INGREDIENTS_FAILED,
+          });
+        }
+      })
+      .catch(() => dispatch({ type: GET_INGREDIENTS_FAILED }));
   };
 };
