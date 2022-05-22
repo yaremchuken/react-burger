@@ -1,0 +1,19 @@
+.ingredient {
+  margin: 0;
+  padding: 0;
+  width: 272px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.ingredientImage {
+  width: 200px;
+  height: 120px;
+}
+
+.ingredientPrice {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+}

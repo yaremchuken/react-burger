@@ -1,0 +1,8 @@
+.ingredientElement {
+  display: flex;
+  align-items: center;
+}
+
+.dragElement {
+  width: 50px;
+}

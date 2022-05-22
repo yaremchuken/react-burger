@@ -1,36 +1,54 @@
-import { ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { useCallback, useContext, useEffect } from 'react';
-import { BurgerContext } from '../../services/BurgerContext';
-import { IngredientsContext } from '../../services/IngredientsContext';
-import { ActionType } from '../../utils/enums';
-import { random } from '../../utils/utils';
+import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useEffect } from 'react';
+import { useDrop } from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../../services/actions/burger';
+import { takeOrder } from '../../services/actions/order';
+import { random, uniqueIdProvider } from '../../utils/utils';
+import BurgerIngredient from '../burger-ingredient/BurgerIngredient';
+import Loader from '../loader/Loader';
 import styles from './burger-constructor.module.css';
 
-const BurgerConstructor = (props) => {
-  const { ingredients } = useContext(IngredientsContext);
-  const { burgerState, burgerDispatcher } = useContext(BurgerContext);
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
 
-  const addIngredient = useCallback(
-    (ingredient) => {
-      burgerDispatcher({ type: ActionType.ADD_INGREDIENT, payload: ingredient });
+  const { ingredients } = useSelector((store) => store.ingredients);
+  const { composition, price, draggedIngredient } = useSelector((store) => store.burger);
+
+  const addIngredient = (id) => {
+    const ingredient = ingredients.find((i) => i._id === id);
+    dispatch({ type: ADD_INGREDIENT, ingredient: { ...ingredient, uniqueId: uniqueIdProvider() } });
+  };
+
+  const removeIngredient = (ingredient) => {
+    dispatch({ type: REMOVE_INGREDIENT, ingredient });
+  };
+
+  const orderHandler = () => {
+    const ids = composition.map((i) => i._id);
+    dispatch(takeOrder([...ids, ids[0]]));
+  };
+
+  const sortIngredients = (dragIdx, dropIdx) => {
+    dispatch({ type: SORT_INGREDIENTS, idxFrom: dragIdx, idxTo: dropIdx });
+  };
+
+  const [{ opacity }, target] = useDrop({
+    accept: 'ingredient',
+    drop(entity) {
+      addIngredient(entity.id);
     },
-    [burgerDispatcher]
-  );
+    collect: (monitor) => ({
+      opacity: monitor.isOver() ? 0.7 : 1,
+    }),
+  });
 
-  const removeIngredient = useCallback(
-    (ingredient) => {
-      burgerDispatcher({ type: ActionType.REMOVE_INGREDIENT, payload: ingredient });
-    },
-    [burgerDispatcher]
-  );
-
-  // При отсутствии ингредиентов (кроме булки) создаём рандомный бургер для проверки функционала.
+  // Создаём начальный бургер при загрузке страницы
   useEffect(() => {
-    if (burgerState.composition.length === 1) {
+    if (composition.length === 0) {
       const ingredientsbyType = ingredients.reduce(
         (res, current) => {
-          res[current.type].push(current);
+          res[current.type].push(current._id);
           return res;
         },
         {
@@ -40,78 +58,50 @@ const BurgerConstructor = (props) => {
         }
       );
 
+      addIngredient(random(ingredientsbyType.bun));
       addIngredient(random(ingredientsbyType.sauce));
       addIngredient(random(ingredientsbyType.main));
-      addIngredient(random(ingredientsbyType.main));
-      addIngredient(random(ingredientsbyType.main));
-      addIngredient(random(ingredientsbyType.sauce));
     }
   });
 
-  const composition = burgerState.composition.map((id) => ingredients.find((ing) => ing._id === id));
+  if (composition.length === 0) {
+    return <Loader message={'Готовим наше лучшее предложение'} />;
+  }
+
   const bun = composition[0];
 
   return (
-    <section className={`${styles.burgerConstructor} pt-15`}>
-      <div className={styles.ingredientElement} key={0}>
-        <div className={styles.dragElement}></div>
-        <ConstructorElement
-          type={'top'}
-          isLocked={true}
-          text={`${bun.name} (верх)`}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </div>
+    <section className={`${styles.burgerConstructor} pt-15`} ref={target} style={{ opacity }}>
+      <BurgerIngredient key={-1} ingredient={bun} idx={0} closeHandler={() => {}} />
 
       <ul className={styles.ingredientList}>
         {composition
           .slice(1)
-          .map((ingredient, idx) => mapIngredient(ingredient, idx, () => removeIngredient(ingredient)))}
+          .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
+          .map((ingredient, idx) => (
+            <BurgerIngredient
+              key={ingredient.uniqueId}
+              ingredient={ingredient}
+              idx={idx}
+              closeHandler={() => removeIngredient(ingredient)}
+              sortHandler={sortIngredients}
+            />
+          ))}
       </ul>
 
-      <div className={styles.ingredientElement} key={composition.length}>
-        <div className={styles.dragElement}></div>
-        <ConstructorElement
-          type={'bottom'}
-          isLocked={true}
-          text={`${bun.name} (низ)`}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </div>
+      <BurgerIngredient key={-2} ingredient={bun} idx={composition.length} closeHandler={() => {}} />
+
       <div className={styles.order}>
         <div className={styles.orderTotal}>
-          <p className="text text_type_digits-medium">{burgerState.price}</p>
+          <p className="text text_type_digits-medium">{price}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <button onClick={props.orderClickHandler} className={styles.orderButton}>
+        <button onClick={orderHandler} className={styles.orderButton}>
           <span className="text text_type_main-small">Оформить заказ</span>
         </button>
       </div>
     </section>
   );
-};
-
-const mapIngredient = (ingredient, idx, closeHandler) => {
-  return (
-    <li className={styles.ingredientElement} key={idx}>
-      <div className={styles.dragElement}>
-        <DragIcon type="primary" />
-      </div>
-      <ConstructorElement
-        isLocked={false}
-        text={ingredient.name}
-        price={ingredient.price}
-        thumbnail={ingredient.image}
-        handleClose={closeHandler}
-      />
-    </li>
-  );
-};
-
-BurgerConstructor.propTypes = {
-  orderClickHandler: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;
