@@ -1,0 +1,7 @@
+.homepage {
+  max-width: 1280px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  gap: 40px;
+}
