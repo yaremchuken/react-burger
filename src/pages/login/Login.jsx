@@ -1,37 +1,20 @@
-import { useState } from 'react';
+import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import styles from './login.module.css';
+import styles from '../shared/shared.module.css';
 
 export const Login = () => {
-  const [showPassword, setShowPassword] = useState();
-
   return (
-    <section className={`${styles.login}`}>
+    <div className={styles.main}>
       <h2 className="text text_type_main-medium">Вход</h2>
 
-      <form action="" className={`${styles.form} pt-6 pb-20`}>
+      <form action="" className={`pt-6 pb-20`}>
         <fieldset className={styles.fieldset}>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className={`${styles.input} text text_type_main-default text_color_inactive`}
-            placeholder="E-mail"
-            required
-          />
-          <input
-            type={`${showPassword ? 'text' : 'password'}`}
-            id="password"
-            name="password"
-            className={`${styles.input} ${styles.password} text text_type_main-default text_color_inactive`}
-            placeholder="Пароль"
-            required
-          />
-          <button type="button" className={styles.showPassword} onClick={() => setShowPassword(!showPassword)}></button>
+          <Input type="email" name="email" key={'email'} placeholder="E-mail" />
+          <PasswordInput name={'password'} />
         </fieldset>
-        <button type="submit" className={`${styles.submit} text text_type_main-default`}>
+        <Button type="primary" size="medium">
           Войти
-        </button>
+        </Button>
       </form>
 
       <ul className={`${styles.guides} mt-20`}>
@@ -44,11 +27,11 @@ export const Login = () => {
 
         <li className={`${styles.guide} text text_type_main-default text_color_inactive`}>
           <p className={styles.guideText}>Забыли пароль? </p>
-          <Link className={styles.guideLink} to={'/reset-password'}>
+          <Link className={styles.guideLink} to={'/forgot-password'}>
             Восстановить пароль
           </Link>
         </li>
       </ul>
-    </section>
+    </div>
   );
 };
