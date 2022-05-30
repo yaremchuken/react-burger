@@ -1,16 +1,51 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../../services/actions/user';
 import styles from '../shared/shared.module.css';
 
 export const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, loginFailed } = useSelector((store) => store.user);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  };
+
   return (
     <div className={styles.main}>
+      {loginFailed && (
+        <p className="text text_type_main-default pb-5" style={{ color: 'red' }}>
+          Не удалось залогиниться, проверьте e-mail и пароль
+        </p>
+      )}
+
       <h2 className="text text_type_main-medium">Вход</h2>
 
-      <form action="" className={`pt-6 pb-20`}>
+      <form onSubmit={onSubmit} className={`pt-6 pb-20`}>
         <fieldset className={styles.fieldset}>
-          <Input type="email" name="email" key={'email'} placeholder="E-mail" />
-          <PasswordInput name={'password'} />
+          <Input
+            type="email"
+            name="email"
+            key={'email'}
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <PasswordInput name={'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
         </fieldset>
         <Button type="primary" size="medium">
           Войти

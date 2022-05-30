@@ -1,16 +1,50 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { resetPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
 
 export const ResetPassword = () => {
+  const [password, setPasswod] = useState('');
+  const [token, setToken] = useState('');
+
+  const navigate = useNavigate();
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    resetPassword({ password, token })
+      .then((res) => {
+        if (res && res.success) {
+          navigate('/login');
+        } else {
+          throw new Error('Reset Password failed');
+        }
+      })
+      .catch((e) => {
+        throw new Error(e);
+      });
+  };
+
   return (
     <div className={styles.main}>
       <h2 className="text text_type_main-medium">Восстановление пароля</h2>
 
-      <form action="" className={`pt-6 pb-20`}>
+      <form onSubmit={submitHandler} className={`pt-6 pb-20`}>
         <fieldset className={styles.fieldset}>
-          <PasswordInput name="password" placeholder="Введите новый пароль" />
-          <Input type="text" name="code" key="code" placeholder="Введите код из письма" />
+          <PasswordInput
+            name="password"
+            placeholder="Введите новый пароль"
+            value={password}
+            onChange={(e) => setPasswod(e.target.value)}
+          />
+          <Input
+            type="text"
+            name="token"
+            key="token"
+            placeholder="Введите код из письма"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+          />
         </fieldset>
         <Button type="primary" size="medium">
           Сохранить

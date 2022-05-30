@@ -1,15 +1,42 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { forgotPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
 
 export const ForgotPassword = () => {
+  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    forgotPassword(email)
+      .then((res) => {
+        if (res && res.success) {
+          navigate('/reset-password');
+        } else {
+          throw new Error('Reset E-mail failed');
+        }
+      })
+      .catch((e) => {
+        throw new Error(e);
+      });
+  };
+
   return (
     <div className={styles.main}>
       <h2 className="text text_type_main-medium">Восстановление пароля</h2>
 
-      <form action="" className={`pt-6 pb-20`}>
+      <form onSubmit={submitHandler} className={`pt-6 pb-20`}>
         <fieldset className={styles.fieldset}>
-          <Input type="email" name="email" key={'email'} placeholder="Укажите e-mail" />
+          <Input
+            type="email"
+            name="email"
+            key={'email'}
+            placeholder="Укажите e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </fieldset>
         <Button type="primary" size="medium">
           Восстановить
