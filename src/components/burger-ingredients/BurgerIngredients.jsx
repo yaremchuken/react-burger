@@ -28,7 +28,7 @@ const BurgerIngredients = () => {
   };
 
   useEffect(() => {
-    if (bunRef && holderOffset === 0) {
+    if (bunRef.current && holderOffset === 0) {
       setHolderOffset(bunRef.current.getBoundingClientRect().y);
     }
   }, [bunRef, holderOffset]);
@@ -47,6 +47,10 @@ const BurgerIngredients = () => {
   const getYOffset = (key, ref) => {
     return { key, yPos: Math.abs(ref.current.getBoundingClientRect().y - holderOffset) };
   };
+
+  if (ingredients.length === 0) {
+    return null;
+  }
 
   return (
     <section className={styles.burgerIngredients}>

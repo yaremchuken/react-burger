@@ -1,6 +1,7 @@
-import { ACCESS_TOKEN_COOKIE_PATH, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
+import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
 import { setCookie } from '../../utils/utils';
-import { login, logout, refreshToken, register } from '../apiService';
+import { getUser, login, logout, patchUser, register } from '../apiService';
+import { persistTokens } from './token';
 
 export const REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST';
 export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
@@ -14,9 +15,13 @@ export const LOGOUT_USER_REQUEST = 'LOGOUT_USER_REQUEST';
 export const LOGOUT_USER_SUCCESS = 'LOGOUT_USER_SUCCESS';
 export const LOGOUT_USER_FAILED = 'LOGOUT_USER_FAILED';
 
-export const REFRESH_TOKEN_REQUEST = 'REFRESH_TOKEN_REQUEST';
-export const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS';
-export const REFRESH_TOKEN_FAILED = 'REFRESH_TOKEN_FAILED';
+export const GET_USER_REQUEST = 'GET_USER_REQUEST';
+export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
+export const GET_USER_FAILED = 'GET_USER_FAILED';
+
+export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
+export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_FAILED = 'UPDATE_USER_FAILED';
 
 export const registerUser = (credentials) => {
   return (dispatch) => {
@@ -92,35 +97,50 @@ export const logoutUser = (refreshToken) => {
   };
 };
 
-export const updateUser = (user, token) => {
-  //TODO: continue with api method updateUser()
-};
-
-export const refreshAccessToken = (token) => {
+export const getUserByToken = (token) => {
   return (dispatch) => {
     dispatch({
-      type: REFRESH_TOKEN_REQUEST,
+      type: GET_USER_REQUEST,
     });
 
-    refreshToken(token)
+    getUser(token)
       .then((res) => {
         if (res && res.success) {
           dispatch({
-            type: REFRESH_TOKEN_SUCCESS,
-            payload: res,
+            type: GET_USER_SUCCESS,
+            payload: res.user,
           });
-          persistTokens(res.accessToken, res.refreshToken);
         } else {
           dispatch({
-            type: REFRESH_TOKEN_FAILED,
+            type: GET_USER_FAILED,
           });
         }
       })
-      .catch(() => dispatch({ type: REFRESH_TOKEN_FAILED }));
+      .catch(() => {
+        dispatch({ type: GET_USER_FAILED });
+      });
   };
 };
 
-const persistTokens = (accessToken, refreshToken) => {
-  setCookie(ACCESS_TOKEN_COOKIE_PATH, accessToken, ACCESS_TOKEN_LIFETIME);
-  localStorage.setItem(REFRESH_TOKEN_LOCAL_PATH, refreshToken);
+export const updateUser = (user, token) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_USER_REQUEST,
+    });
+
+    patchUser(user, token)
+      .then((res) => {
+        if (res && res.success) {
+          dispatch({
+            type: UPDATE_USER_SUCCESS,
+            payload: res.user,
+          });
+        } else {
+          dispatch({
+            type: UPDATE_USER_FAILED,
+          });
+        }
+      })
+      .catch(() => dispatch({ type: UPDATE_USER_FAILED }));
+  };
 };

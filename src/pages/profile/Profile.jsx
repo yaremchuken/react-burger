@@ -2,8 +2,8 @@ import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-component
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { logoutUser, refreshAccessToken, updateUser } from '../../services/actions/user';
-import { getUser } from '../../services/apiService';
+import { refreshAccessToken } from '../../services/actions/token';
+import { logoutUser, updateUser } from '../../services/actions/user';
 import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import styles from './profile.module.css';
@@ -23,10 +23,9 @@ export const Profile = () => {
   const navigate = useNavigate();
   const dispath = useDispatch();
 
-  const [user, setUser] = useState();
   const [needUpdateUser, setNeedUpdateUser] = useState();
 
-  const { tokenRequested, tokenSuccess, tokenFailed } = useSelector((store) => store.user);
+  const { user, tokenRequested, tokenSuccess, tokenFailed } = useSelector((store) => store.user);
 
   const refreshToken = useCallback(() => {
     dispath(refreshAccessToken(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
@@ -40,22 +39,11 @@ export const Profile = () => {
   );
 
   useEffect(() => {
-    if (!user) {
-      const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
-      if (!token && !(tokenRequested || tokenSuccess || tokenFailed)) {
-        refreshToken();
-      }
-      if (token) {
-        getUser(token).then((res) => {
-          if (res && res.success) {
-            setUser(res.user);
-            setName(res.user.name);
-            setEmail(res.user.email);
-          }
-        });
-      }
+    if (user && !name) {
+      setName(user.name);
+      setEmail(user.email);
     }
-  }, [user, setName, setEmail, setPassword, refreshToken, tokenRequested, tokenSuccess, tokenFailed]);
+  }, [user, name, setName, setEmail]);
 
   useEffect(() => {
     if (needUpdateUser) {
@@ -96,6 +84,10 @@ export const Profile = () => {
     setPassword('');
     setEdits([]);
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className={styles.profile}>
@@ -171,7 +163,14 @@ export const Profile = () => {
             <button className={`text text_type_main-default ${styles.cancelButton}`} onClick={clearChanges}>
               Отмена
             </button>
-            <Button type="primary" size="medium" onClick={() => setNeedUpdateUser(true)}>
+            <Button
+              type="primary"
+              size="medium"
+              onClick={(e) => {
+                e.preventDefault();
+                setNeedUpdateUser(true);
+              }}
+            >
               Сохранить
             </Button>
           </div>

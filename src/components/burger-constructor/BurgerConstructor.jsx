@@ -1,5 +1,5 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../../services/actions/burger';
@@ -15,10 +15,13 @@ const BurgerConstructor = () => {
   const { ingredients } = useSelector((store) => store.ingredients);
   const { composition, price, draggedIngredient } = useSelector((store) => store.burger);
 
-  const addIngredient = (id) => {
-    const ingredient = ingredients.find((i) => i._id === id);
-    dispatch({ type: ADD_INGREDIENT, ingredient: { ...ingredient, uniqueId: uniqueIdProvider() } });
-  };
+  const addIngredient = useCallback(
+    (id) => {
+      const ingredient = ingredients.find((i) => i._id === id);
+      dispatch({ type: ADD_INGREDIENT, ingredient: { ...ingredient, uniqueId: uniqueIdProvider() } });
+    },
+    [ingredients, dispatch]
+  );
 
   const removeIngredient = (ingredient) => {
     dispatch({ type: REMOVE_INGREDIENT, ingredient });
@@ -45,7 +48,7 @@ const BurgerConstructor = () => {
 
   // Создаём начальный бургер при загрузке страницы
   useEffect(() => {
-    if (composition.length === 0) {
+    if (ingredients.length > 0 && composition.length === 0) {
       const ingredientsbyType = ingredients.reduce(
         (res, current) => {
           res[current.type].push(current._id);
@@ -62,7 +65,11 @@ const BurgerConstructor = () => {
       addIngredient(random(ingredientsbyType.sauce));
       addIngredient(random(ingredientsbyType.main));
     }
-  });
+  }, [addIngredient, ingredients, composition]);
+
+  if (ingredients.length === 0) {
+    return null;
+  }
 
   if (composition.length === 0) {
     return <Loader message={'Готовим наше лучшее предложение'} />;

@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { CHOOSE_INGREDIENT, getIngredients } from '../../services/actions/ingredients';
 import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
+import { getUserByToken } from '../../services/actions/user';
+import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
+import { getCookie } from '../../utils/utils';
 import AppHeader from '../app-header/AppHeader';
 import { AppRoutes } from '../app-routes/AppRoutes';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
@@ -19,10 +22,23 @@ const App = () => {
   );
 
   const { orderNumber, orderRequested } = useSelector((store) => store.order);
+  const { user } = useSelector((store) => store.user);
+  const { tokenRequested } = useSelector((store) => store.token);
 
   useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
+    const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
+    if (!user) {
+      if (token && !tokenRequested) {
+        dispatch(getUserByToken(token));
+      }
+    }
+  }, [user, dispatch, tokenRequested]);
+
+  useEffect(() => {
+    if (user && ingredients.length === 0) {
+      dispatch(getIngredients());
+    }
+  }, [user, ingredients, dispatch]);
 
   const closeModals = () => {
     dispatch({ type: CLEAR_ORDER_NUMBER });
@@ -44,7 +60,7 @@ const App = () => {
           <Loader message={'Обрабатываем Ваш заказ'} />
         ) : (
           <>
-            {ingredients.length > 0 && <AppRoutes />}
+            <AppRoutes />
 
             {orderNumber && (
               <Modal title="Детали заказа" onCloseDemand={closeModals}>

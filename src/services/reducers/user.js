@@ -1,14 +1,17 @@
 import {
+  GET_USER_FAILED,
+  GET_USER_REQUEST,
+  GET_USER_SUCCESS,
   LOGIN_USER_FAILED,
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER_SUCCESS,
-  REFRESH_TOKEN_FAILED,
-  REFRESH_TOKEN_REQUEST,
-  REFRESH_TOKEN_SUCCESS,
   REGISTER_USER_FAILED,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  UPDATE_USER_FAILED,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
 } from '../actions/user';
 
 const initialState = {
@@ -19,6 +22,13 @@ const initialState = {
 
   loginRequested: false,
   loginFailed: false,
+
+  getRequested: false,
+  getFailed: false,
+  getSuccess: false,
+
+  updateRequested: false,
+  updateFailed: false,
 
   tokenRequested: false,
   tokenSuccess: false,
@@ -72,26 +82,48 @@ export const userReducer = (state = initialState, action) => {
         ...initialState,
       };
 
-    case REFRESH_TOKEN_REQUEST:
+    case GET_USER_REQUEST:
       return {
         ...state,
-        tokenRequested: true,
-        tokenSuccess: false,
-        tokenFailed: false,
+        getRequested: true,
+        getFailed: false,
+        getSuccess: false,
       };
 
-    case REFRESH_TOKEN_FAILED:
+    case GET_USER_FAILED:
       return {
         ...state,
-        tokenRequested: false,
-        tokenFailed: true,
+        getRequested: false,
+        getFailed: true,
       };
 
-    case REFRESH_TOKEN_SUCCESS:
+    case GET_USER_SUCCESS:
       return {
         ...state,
-        tokenRequested: false,
-        tokenSuccess: true,
+        getRequested: false,
+        getSuccess: true,
+        user: action.payload,
+      };
+
+    case UPDATE_USER_REQUEST:
+      return {
+        ...state,
+        updateRequested: true,
+        updateFailed: false,
+      };
+
+    case UPDATE_USER_FAILED:
+      return {
+        ...state,
+        updateRequested: false,
+        updateFailed: true,
+      };
+
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        updateRequested: false,
+        user: action.payload,
       };
 
     default:

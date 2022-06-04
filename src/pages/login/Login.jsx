@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/actions/user';
+import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
+import { getCookie } from '../../utils/utils';
 import styles from '../shared/shared.module.css';
 
 export const Login = () => {
@@ -24,6 +26,10 @@ export const Login = () => {
     e.preventDefault();
     dispatch(loginUser({ email, password }));
   };
+
+  if (!user && getCookie(ACCESS_TOKEN_COOKIE_PATH)) {
+    return null;
+  }
 
   return (
     <div className={styles.main}>

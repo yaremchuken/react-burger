@@ -47,7 +47,7 @@ export const getUser = (accessToken) => {
   return request(USER_PATH, undefined, 'GET', accessToken);
 };
 
-export const updateUser = (user, accessToken) => {
+export const patchUser = (user, accessToken) => {
   return request(USER_PATH, user, 'PATCH', accessToken);
 };
 
