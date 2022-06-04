@@ -17,6 +17,7 @@ const App = () => {
   const { ingredients, ingredientsRequested, ingredientsFailed, chosenIngredient } = useSelector(
     (store) => store.ingredients
   );
+
   const { orderNumber, orderRequested } = useSelector((store) => store.order);
 
   useEffect(() => {

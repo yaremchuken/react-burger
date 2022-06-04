@@ -36,6 +36,7 @@
 }
 
 .fieldset {
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -46,4 +47,19 @@
 
 .fieldset > div > div {
   width: 480px;
+}
+
+.controllers {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
+}
+
+.cancelButton {
+  color: #4c4cff;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
 }

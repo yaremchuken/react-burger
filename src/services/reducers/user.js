@@ -2,6 +2,10 @@ import {
   LOGIN_USER_FAILED,
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
+  LOGOUT_USER_SUCCESS,
+  REFRESH_TOKEN_FAILED,
+  REFRESH_TOKEN_REQUEST,
+  REFRESH_TOKEN_SUCCESS,
   REGISTER_USER_FAILED,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
@@ -9,13 +13,16 @@ import {
 
 const initialState = {
   user: undefined,
-  accessToken: undefined,
 
   registerRequested: false,
   registerFailed: false,
 
   loginRequested: false,
   loginFailed: false,
+
+  tokenRequested: false,
+  tokenSuccess: false,
+  tokenFailed: false,
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -31,7 +38,6 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload.user,
-        accessToken: action.payload.accessToken,
         registerRequested: false,
       };
 
@@ -52,7 +58,6 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload.user,
-        accessToken: action.payload.accessToken,
         loginRequested: false,
       };
 
@@ -60,6 +65,33 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...initialState,
         loginFailed: true,
+      };
+
+    case LOGOUT_USER_SUCCESS:
+      return {
+        ...initialState,
+      };
+
+    case REFRESH_TOKEN_REQUEST:
+      return {
+        ...state,
+        tokenRequested: true,
+        tokenSuccess: false,
+        tokenFailed: false,
+      };
+
+    case REFRESH_TOKEN_FAILED:
+      return {
+        ...state,
+        tokenRequested: false,
+        tokenFailed: true,
+      };
+
+    case REFRESH_TOKEN_SUCCESS:
+      return {
+        ...state,
+        tokenRequested: false,
+        tokenSuccess: true,
       };
 
     default:

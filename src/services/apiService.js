@@ -5,9 +5,10 @@ import {
   LOGIN_PATH,
   LOGOUT_PATH,
   ORDERS_PATH,
+  REFRESH_TOKEN_PATH,
   REGISTER_PATH,
   RESET_PASSWORD_PATH,
-  TOKEN_PATH,
+  USER_PATH,
 } from '../utils/constants';
 
 export const fetchIngredients = () => {
@@ -27,11 +28,11 @@ export const login = (credentials) => {
 };
 
 export const logout = (token) => {
-  return request(LOGOUT_PATH, token);
+  return request(LOGOUT_PATH, { token });
 };
 
 export const refreshToken = (token) => {
-  return request(TOKEN_PATH, token);
+  return request(REFRESH_TOKEN_PATH, { token });
 };
 
 export const forgotPassword = (email) => {
@@ -42,16 +43,25 @@ export const resetPassword = ({ password, token }) => {
   return request(RESET_PASSWORD_PATH, { password, token });
 };
 
-const request = (path, body) => {
+export const getUser = (accessToken) => {
+  return request(USER_PATH, undefined, 'GET', accessToken);
+};
+
+export const updateUser = (user, accessToken) => {
+  return request(USER_PATH, user, 'PATCH', accessToken);
+};
+
+const request = (path, body, method, accessToken) => {
   return fetch(
     `${API_URL}${path}`,
-    body && {
-      method: 'POST',
+    (body || method) && {
+      method: method ?? 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        authorization: accessToken,
       },
-      body: JSON.stringify(body),
+      body: body && JSON.stringify(body),
     }
   ).then(checkResponse);
 };

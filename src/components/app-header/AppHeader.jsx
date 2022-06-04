@@ -1,8 +1,10 @@
 import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styles from './app-header.module.css';
 
 const AppHeader = () => {
+  const location = useLocation();
+
   return (
     <header className={`${styles.header} m-10`}>
       <nav className={styles.navbar}>
@@ -12,7 +14,9 @@ const AppHeader = () => {
               <li className={`${styles.navbarElement} pt-4 pb-4 pr-5 pl-5`}>
                 <BurgerIcon type="primary" />
                 <Link to={'/'} className={styles.navbarLink}>
-                  <p className="text text_type_main-default">Конструктор</p>
+                  <p className={`text text_type_main-default ${location.pathname !== '/' && 'text_color_inactive'}`}>
+                    Конструктор
+                  </p>
                 </Link>
               </li>
 
@@ -30,7 +34,13 @@ const AppHeader = () => {
           <li className={`${styles.navbarElement} ${styles.rightBar} pt-4 pb-4 pr-5 pl-5`}>
             <ProfileIcon type="secondary" />
             <Link to={'/profile'} className={styles.navbarLink}>
-              <p className="text text_type_main-default text_color_inactive">Личный кабинет</p>
+              <p
+                className={`text text_type_main-default ${
+                  !location.pathname.startsWith('/profile') && 'text_color_inactive'
+                }`}
+              >
+                Личный кабинет
+              </p>
             </Link>
           </li>
         </ul>
