@@ -1,18 +1,23 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { PASSWORD_RESET_REQUESTED } from '../../services/actions/user';
 import { forgotPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
 
 export const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const submitHandler = (e) => {
     e.preventDefault();
     forgotPassword(email)
       .then((res) => {
         if (res && res.success) {
+          dispatch({ type: PASSWORD_RESET_REQUESTED });
           navigate('/reset-password');
         } else {
           throw new Error('Reset E-mail failed');

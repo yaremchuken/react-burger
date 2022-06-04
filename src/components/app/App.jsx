@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { CHOOSE_INGREDIENT, getIngredients } from '../../services/actions/ingredients';
 import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
 import { getUserByToken } from '../../services/actions/user';
@@ -26,8 +25,8 @@ const App = () => {
   const { tokenRequested } = useSelector((store) => store.token);
 
   useEffect(() => {
-    const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
     if (!user) {
+      const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
       if (token && !tokenRequested) {
         dispatch(getUserByToken(token));
       }
@@ -35,10 +34,10 @@ const App = () => {
   }, [user, dispatch, tokenRequested]);
 
   useEffect(() => {
-    if (user && ingredients.length === 0) {
+    if (ingredients.length === 0) {
       dispatch(getIngredients());
     }
-  }, [user, ingredients, dispatch]);
+  }, [ingredients, dispatch]);
 
   const closeModals = () => {
     dispatch({ type: CLEAR_ORDER_NUMBER });
@@ -51,31 +50,29 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      <BrowserRouter>
-        <AppHeader />
+      <AppHeader />
 
-        {ingredientsRequested ? (
-          <Loader message={'Загружаем список ингредиентов'} />
-        ) : orderRequested ? (
-          <Loader message={'Обрабатываем Ваш заказ'} />
-        ) : (
-          <>
-            <AppRoutes />
+      {ingredientsRequested ? (
+        <Loader message={'Загружаем список ингредиентов'} />
+      ) : orderRequested ? (
+        <Loader message={'Обрабатываем Ваш заказ'} />
+      ) : (
+        <>
+          <AppRoutes />
 
-            {orderNumber && (
-              <Modal title="Детали заказа" onCloseDemand={closeModals}>
-                <OrderDetails />
-              </Modal>
-            )}
+          {orderNumber && (
+            <Modal title="Детали заказа" onCloseDemand={closeModals}>
+              <OrderDetails />
+            </Modal>
+          )}
 
-            {chosenIngredient && (
-              <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
-                <IngredientDetails />
-              </Modal>
-            )}
-          </>
-        )}
-      </BrowserRouter>
+          {chosenIngredient && (
+            <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
+              <IngredientDetails />
+            </Modal>
+          )}
+        </>
+      )}
     </div>
   );
 };

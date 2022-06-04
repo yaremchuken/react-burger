@@ -2,6 +2,7 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { useCallback, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../../services/actions/burger';
 import { takeOrder } from '../../services/actions/order';
 import { random, uniqueIdProvider } from '../../utils/utils';
@@ -14,6 +15,9 @@ const BurgerConstructor = () => {
 
   const { ingredients } = useSelector((store) => store.ingredients);
   const { composition, price, draggedIngredient } = useSelector((store) => store.burger);
+  const { user } = useSelector((store) => store.user);
+
+  const navigate = useNavigate();
 
   const addIngredient = useCallback(
     (id) => {
@@ -28,8 +32,12 @@ const BurgerConstructor = () => {
   };
 
   const orderHandler = () => {
-    const ids = composition.map((i) => i._id);
-    dispatch(takeOrder([...ids, ids[0]]));
+    if (!user) {
+      navigate('/login');
+    } else {
+      const ids = composition.map((i) => i._id);
+      dispatch(takeOrder([...ids, ids[0]]));
+    }
   };
 
   const sortIngredients = (dragIdx, dropIdx) => {

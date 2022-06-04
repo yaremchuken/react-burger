@@ -6,6 +6,7 @@ import {
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER_SUCCESS,
+  PASSWORD_RESET_REQUESTED,
   REGISTER_USER_FAILED,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
@@ -30,9 +31,7 @@ const initialState = {
   updateRequested: false,
   updateFailed: false,
 
-  tokenRequested: false,
-  tokenSuccess: false,
-  tokenFailed: false,
+  passwordResetRequested: false,
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -124,6 +123,12 @@ export const userReducer = (state = initialState, action) => {
         ...state,
         updateRequested: false,
         user: action.payload,
+      };
+
+    case PASSWORD_RESET_REQUESTED:
+      return {
+        ...state,
+        passwordResetRequested: true,
       };
 
     default:

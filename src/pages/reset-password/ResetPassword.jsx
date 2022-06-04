@@ -1,5 +1,6 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { resetPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
@@ -9,6 +10,14 @@ export const ResetPassword = () => {
   const [token, setToken] = useState('');
 
   const navigate = useNavigate();
+
+  const { passwordResetRequested } = useSelector((storer) => storer.user);
+
+  useEffect(() => {
+    if (!passwordResetRequested) {
+      navigate('/forgot-password');
+    }
+  }, [passwordResetRequested, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();

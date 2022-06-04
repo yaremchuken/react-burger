@@ -8,29 +8,55 @@ import { NotFound } from '../../pages/not-found/NotFound';
 import { Profile } from '../../pages/profile/Profile';
 import { Register } from '../../pages/register/Register';
 import { ResetPassword } from '../../pages/reset-password/ResetPassword';
+import ProtectedRoute from '../protected-route/ProtectedRoute';
+import UnauthorizedRoute from '../unauthorized-route/UnauthorizedRoute';
 
 export const AppRoutes = () => {
   const { user } = useSelector((store) => store.user);
 
-  if (!user) {
-    return (
-      <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="*" element={<Login />} />
-      </Routes>
-    );
-  }
-
   return (
     <Routes>
       <Route path="/" element={<Homepage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/profile/*" element={<Profile />} />
+      <Route
+        path="/login"
+        element={
+          <UnauthorizedRoute user={user}>
+            <Login />
+          </UnauthorizedRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <UnauthorizedRoute user={user}>
+            <Register />
+          </UnauthorizedRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <UnauthorizedRoute user={user}>
+            <ForgotPassword />
+          </UnauthorizedRoute>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <UnauthorizedRoute user={user}>
+            <ResetPassword />
+          </UnauthorizedRoute>
+        }
+      />
+      <Route
+        path="/profile/*"
+        element={
+          <ProtectedRoute user={user}>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/ingredients/:id" element={<Ingredients />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

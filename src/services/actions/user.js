@@ -23,6 +23,8 @@ export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 export const UPDATE_USER_FAILED = 'UPDATE_USER_FAILED';
 
+export const PASSWORD_RESET_REQUESTED = 'PASSWORD_RESET_REQUESTED';
+
 export const registerUser = (credentials) => {
   return (dispatch) => {
     dispatch({
