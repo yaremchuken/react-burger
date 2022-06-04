@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { CHOOSE_INGREDIENT, getIngredients } from '../../services/actions/ingredients';
 import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
 import { getUserByToken } from '../../services/actions/user';
@@ -15,6 +16,7 @@ import styles from './app.module.css';
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { ingredients, ingredientsRequested, ingredientsFailed, chosenIngredient } = useSelector(
     (store) => store.ingredients
@@ -42,6 +44,7 @@ const App = () => {
   const closeModals = () => {
     dispatch({ type: CLEAR_ORDER_NUMBER });
     dispatch({ type: CHOOSE_INGREDIENT });
+    navigate('/');
   };
 
   if (ingredientsFailed) {
@@ -68,7 +71,7 @@ const App = () => {
 
           {chosenIngredient && (
             <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
-              <IngredientDetails />
+              <IngredientDetails ingredient={chosenIngredient} />
             </Modal>
           )}
         </>

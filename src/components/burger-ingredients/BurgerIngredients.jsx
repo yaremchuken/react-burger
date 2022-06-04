@@ -1,6 +1,7 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { CHOOSE_INGREDIENT } from '../../services/actions/ingredients';
 import IngredientCard from '../ingredient-card/IngredientCard';
 import styles from './burger-ingredients.module.css';
@@ -13,6 +14,7 @@ const types = [
 
 const BurgerIngredients = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { ingredients } = useSelector((store) => store.ingredients);
 
@@ -25,6 +27,7 @@ const BurgerIngredients = () => {
 
   const onIngredientChoose = (id) => {
     dispatch({ type: CHOOSE_INGREDIENT, ingredient: ingredients.find((i) => i._id === id) });
+    navigate(`/ingredients/${id}`);
   };
 
   useEffect(() => {

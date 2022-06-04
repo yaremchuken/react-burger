@@ -13,6 +13,7 @@ import UnauthorizedRoute from '../unauthorized-route/UnauthorizedRoute';
 
 export const AppRoutes = () => {
   const { user } = useSelector((store) => store.user);
+  const { chosenIngredient } = useSelector((store) => store.ingredients);
 
   return (
     <Routes>
@@ -57,7 +58,7 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/ingredients/:id" element={<Ingredients />} />
+      <Route path="/ingredients/:id" element={chosenIngredient ? <Homepage /> : <Ingredients />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
