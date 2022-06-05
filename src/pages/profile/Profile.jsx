@@ -1,11 +1,9 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { refreshAccessToken } from '../../services/actions/token';
 import { logoutUser, updateUser } from '../../services/actions/user';
-import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
-import { getCookie } from '../../utils/utils';
+import { REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
 import styles from './profile.module.css';
 
 export const Profile = () => {
@@ -23,20 +21,7 @@ export const Profile = () => {
   const navigate = useNavigate();
   const dispath = useDispatch();
 
-  const [needUpdateUser, setNeedUpdateUser] = useState();
-
-  const { user, tokenRequested, tokenSuccess, tokenFailed } = useSelector((store) => store.user);
-
-  const refreshToken = useCallback(() => {
-    dispath(refreshAccessToken(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
-  }, [dispath]);
-
-  const updateUserData = useCallback(
-    (token) => {
-      dispath(updateUser({ name, email, password }, token));
-    },
-    [dispath, name, email, password]
-  );
+  const { user } = useSelector((store) => store.user);
 
   useEffect(() => {
     if (user && !name) {
@@ -45,18 +30,15 @@ export const Profile = () => {
     }
   }, [user, name, setName, setEmail]);
 
-  useEffect(() => {
-    if (needUpdateUser) {
-      const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
-      if (!token && !(tokenRequested || tokenSuccess || tokenFailed)) {
-        refreshToken();
-      }
-      if (token) {
-        updateUserData(token);
-        setNeedUpdateUser(false);
-      }
+  const updateUserData = (e) => {
+    e.preventDefault();
+    const form = { name, email };
+    if (password.length > 0) {
+      form.password = password;
     }
-  }, [needUpdateUser, refreshToken, updateUserData, tokenRequested, tokenSuccess, tokenFailed]);
+    dispath(updateUser(form));
+    setEdits([]);
+  };
 
   const logout = () => {
     dispath(logoutUser(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
@@ -163,14 +145,7 @@ export const Profile = () => {
             <button className={`text text_type_main-default ${styles.cancelButton}`} onClick={clearChanges}>
               Отмена
             </button>
-            <Button
-              type="primary"
-              size="medium"
-              onClick={(e) => {
-                e.preventDefault();
-                setNeedUpdateUser(true);
-              }}
-            >
+            <Button type="primary" size="medium" onClick={updateUserData}>
               Сохранить
             </Button>
           </div>

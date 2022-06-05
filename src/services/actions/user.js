@@ -1,7 +1,5 @@
-import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
-import { setCookie } from '../../utils/utils';
+import { dropTokens, persistTokens } from '../../utils/utils';
 import { getUser, login, logout, patchUser, register } from '../apiService';
-import { persistTokens } from './token';
 
 export const REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST';
 export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
@@ -87,8 +85,7 @@ export const logoutUser = (refreshToken) => {
           dispatch({
             type: LOGOUT_USER_SUCCESS,
           });
-          setCookie(ACCESS_TOKEN_COOKIE_PATH, '', 0);
-          localStorage.removeItem(REFRESH_TOKEN_LOCAL_PATH);
+          dropTokens();
         } else {
           dispatch({
             type: LOGOUT_USER_FAILED,
@@ -124,13 +121,13 @@ export const getUserByToken = (token) => {
   };
 };
 
-export const updateUser = (user, token) => {
+export const updateUser = (user) => {
   return (dispatch) => {
     dispatch({
       type: UPDATE_USER_REQUEST,
     });
 
-    patchUser(user, token)
+    patchUser(user)
       .then((res) => {
         if (res && res.success) {
           dispatch({

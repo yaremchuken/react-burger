@@ -1,3 +1,5 @@
+import { ACCESS_TOKEN_COOKIE_PATH, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LOCAL_PATH } from './constants';
+
 export const random = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
@@ -24,4 +26,14 @@ export const getCookie = (name) => {
     }
   });
   return value;
+};
+
+export const persistTokens = (accessToken, refreshToken) => {
+  setCookie(ACCESS_TOKEN_COOKIE_PATH, accessToken, ACCESS_TOKEN_LIFETIME);
+  localStorage.setItem(REFRESH_TOKEN_LOCAL_PATH, refreshToken);
+};
+
+export const dropTokens = () => {
+  setCookie(ACCESS_TOKEN_COOKIE_PATH, '', 0);
+  localStorage.removeItem(REFRESH_TOKEN_LOCAL_PATH);
 };

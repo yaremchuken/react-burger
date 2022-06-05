@@ -24,16 +24,15 @@ const App = () => {
 
   const { orderNumber, orderRequested } = useSelector((store) => store.order);
   const { user } = useSelector((store) => store.user);
-  const { tokenRequested } = useSelector((store) => store.token);
 
   useEffect(() => {
     if (!user) {
       const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
-      if (token && !tokenRequested) {
+      if (token) {
         dispatch(getUserByToken(token));
       }
     }
-  }, [user, dispatch, tokenRequested]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (ingredients.length === 0) {
