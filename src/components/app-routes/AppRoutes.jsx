@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { ForgotPassword } from '../../pages/forgot-password/ForgotPassword';
 import { Homepage } from '../../pages/homepage/Homepage';
 import { Ingredients } from '../../pages/ingredients/Ingredients';
@@ -8,24 +9,23 @@ import { NotFound } from '../../pages/not-found/NotFound';
 import { Profile } from '../../pages/profile/Profile';
 import { Register } from '../../pages/register/Register';
 import { ResetPassword } from '../../pages/reset-password/ResetPassword';
+import IngredientDetails from '../ingredient-details/IngredientDetails';
+import Modal from '../modal/Modal';
 import ProtectedRoute from '../protected-route/ProtectedRoute';
 import UnauthorizedRoute from '../unauthorized-route/UnauthorizedRoute';
 
-export const AppRoutes = () => {
+export const AppRoutes = ({ closeModals }) => {
   const { user } = useSelector((store) => store.user);
-  const { chosenIngredient } = useSelector((store) => store.ingredients);
 
-  return (
-    <Routes>
+  const location = useLocation();
+  const background = location.state?.background;
+
+  const route = (
+    <Routes location={background ?? location}>
       <Route path="/" element={<Homepage />} />
-      <Route
-        path="/login"
-        element={
-          <UnauthorizedRoute user={user}>
-            <Login />
-          </UnauthorizedRoute>
-        }
-      />
+
+      <Route path="/login" element={<Login />} />
+
       <Route
         path="/register"
         element={
@@ -34,6 +34,7 @@ export const AppRoutes = () => {
           </UnauthorizedRoute>
         }
       />
+
       <Route
         path="/forgot-password"
         element={
@@ -42,6 +43,7 @@ export const AppRoutes = () => {
           </UnauthorizedRoute>
         }
       />
+
       <Route
         path="/reset-password"
         element={
@@ -50,6 +52,7 @@ export const AppRoutes = () => {
           </UnauthorizedRoute>
         }
       />
+
       <Route
         path="/profile/*"
         element={
@@ -58,8 +61,30 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/ingredients/:id" element={chosenIngredient ? <Homepage /> : <Ingredients />} />
+
+      {background && (
+        <Route
+          path="/ingredients/:id"
+          element={
+            <>
+              <Homepage />
+              <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
+                <IngredientDetails />
+              </Modal>
+            </>
+          }
+        />
+      )}
+
+      <Route path="/ingredients/:id" element={<Ingredients />} />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
+
+  return route;
+};
+
+AppRoutes.propTypes = {
+  closeModals: PropTypes.func.isRequired,
 };

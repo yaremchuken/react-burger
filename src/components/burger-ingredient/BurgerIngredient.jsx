@@ -17,6 +17,8 @@ const BurgerIngredient = (props) => {
         return;
       }
 
+      console.log(item);
+
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();

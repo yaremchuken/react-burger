@@ -1,4 +1,6 @@
+import { takeOrderFailed } from '../action-creators/order-action-creator';
 import { sendTakeOrder } from '../apiService';
+import { CLEAR_COMPOSITION } from './burger';
 
 export const TAKE_ORDER_REQUEST = 'TAKE_ORDER_REQUEST';
 export const TAKE_ORDER_SUCCESS = 'TAKE_ORDER_SUCCESS';
@@ -19,12 +21,11 @@ export const takeOrder = (ingredients) => {
             type: TAKE_ORDER_SUCCESS,
             orderNumber: res.order.number,
           });
+          dispatch({ type: CLEAR_COMPOSITION });
         } else {
-          dispatch({
-            type: TAKE_ORDER_FAILED,
-          });
+          dispatch(takeOrderFailed());
         }
       })
-      .catch(() => dispatch({ type: TAKE_ORDER_FAILED }));
+      .catch(() => dispatch(takeOrderFailed()));
   };
 };

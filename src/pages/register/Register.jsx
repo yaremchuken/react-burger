@@ -29,7 +29,7 @@ export const Register = () => {
   return (
     <div className={styles.main}>
       {registerFailed && (
-        <p className="text text_type_main-default pb-5" style={{ color: 'red' }}>
+        <p className={`text text_type_main-default pb-5 ${styles.error}`}>
           Не удалось зарегистрироваться, проверьте правильность заполнения полей формы
         </p>
       )}

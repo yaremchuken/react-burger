@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CHOOSE_INGREDIENT, getIngredients } from '../../services/actions/ingredients';
+import { getIngredients } from '../../services/actions/ingredients';
 import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
 import { getUserByToken } from '../../services/actions/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import AppHeader from '../app-header/AppHeader';
 import { AppRoutes } from '../app-routes/AppRoutes';
-import IngredientDetails from '../ingredient-details/IngredientDetails';
 import Loader from '../loader/Loader';
 import Modal from '../modal/Modal';
 import OrderDetails from '../order-details/OrderDetails';
@@ -18,9 +17,7 @@ const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { ingredients, ingredientsRequested, ingredientsFailed, chosenIngredient } = useSelector(
-    (store) => store.ingredients
-  );
+  const { ingredients, ingredientsRequested, ingredientsFailed } = useSelector((store) => store.ingredients);
 
   const { orderNumber, orderRequested } = useSelector((store) => store.order);
   const { user } = useSelector((store) => store.user);
@@ -42,7 +39,6 @@ const App = () => {
 
   const closeModals = () => {
     dispatch({ type: CLEAR_ORDER_NUMBER });
-    dispatch({ type: CHOOSE_INGREDIENT });
     navigate('/');
   };
 
@@ -60,17 +56,11 @@ const App = () => {
         <Loader message={'Обрабатываем Ваш заказ'} />
       ) : (
         <>
-          <AppRoutes />
+          <AppRoutes closeModals={closeModals} />
 
           {orderNumber && (
             <Modal title="Детали заказа" onCloseDemand={closeModals}>
               <OrderDetails />
-            </Modal>
-          )}
-
-          {chosenIngredient && (
-            <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
-              <IngredientDetails ingredient={chosenIngredient} />
             </Modal>
           )}
         </>

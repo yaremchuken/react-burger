@@ -1,7 +1,7 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/actions/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
@@ -13,14 +13,15 @@ export const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user, loginFailed } = useSelector((store) => store.user);
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate(location.state?.from ?? '/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ export const Login = () => {
   return (
     <div className={styles.main}>
       {loginFailed && (
-        <p className="text text_type_main-default pb-5" style={{ color: 'red' }}>
+        <p className={`text text_type_main-default pb-5 ${styles.error}`}>
           Не удалось залогиниться, проверьте e-mail и пароль
         </p>
       )}

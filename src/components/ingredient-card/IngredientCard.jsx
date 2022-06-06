@@ -18,7 +18,7 @@ const IngredientCard = (props) => {
 
   const [{ opacity }, ref] = useDrag({
     type: 'ingredient',
-    item: { id: _id },
+    item: { id: _id, type },
     collect: (monitor) => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),

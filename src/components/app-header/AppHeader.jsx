@@ -1,9 +1,10 @@
 import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './app-header.module.css';
 
 const AppHeader = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <header className={`${styles.header} m-10`}>
@@ -27,7 +28,10 @@ const AppHeader = () => {
             </ul>
           </li>
 
-          <li className={`${styles.navbarElement} ${styles.centerBar} pt-4 pb-4 pr-5 pl-5`}>
+          <li
+            className={`${styles.navbarElement} ${styles.centerBar} pt-4 pb-4 pr-5 pl-5`}
+            onClick={() => navigate('/')}
+          >
             <Logo />
           </li>
 

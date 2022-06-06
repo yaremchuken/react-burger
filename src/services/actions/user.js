@@ -1,4 +1,11 @@
 import { dropTokens, persistTokens } from '../../utils/utils';
+import {
+  getUserFailed,
+  loginFailed,
+  logoutFailed,
+  registerFailed,
+  updateUserFailed,
+} from '../action-creators/user-action-creator';
 import { getUser, login, logout, patchUser, register } from '../apiService';
 
 export const REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST';
@@ -38,12 +45,10 @@ export const registerUser = (credentials) => {
           });
           persistTokens(res.accessToken, res.refreshToken);
         } else {
-          dispatch({
-            type: REGISTER_USER_FAILED,
-          });
+          dispatch(registerFailed());
         }
       })
-      .catch(() => dispatch({ type: REGISTER_USER_FAILED }));
+      .catch(() => dispatch(registerFailed()));
   };
 };
 
@@ -62,13 +67,11 @@ export const loginUser = (credentials) => {
           });
           persistTokens(res.accessToken, res.refreshToken);
         } else {
-          dispatch({
-            type: LOGIN_USER_FAILED,
-          });
+          dispatch(loginFailed());
         }
       })
       .catch(() => {
-        dispatch({ type: LOGIN_USER_FAILED });
+        dispatch(loginFailed());
       });
   };
 };
@@ -87,12 +90,10 @@ export const logoutUser = (refreshToken) => {
           });
           dropTokens();
         } else {
-          dispatch({
-            type: LOGOUT_USER_FAILED,
-          });
+          dispatch(logoutFailed());
         }
       })
-      .catch(() => dispatch({ type: LOGOUT_USER_FAILED }));
+      .catch(() => dispatch(logoutFailed()));
   };
 };
 
@@ -110,13 +111,11 @@ export const getUserByToken = (token) => {
             payload: res.user,
           });
         } else {
-          dispatch({
-            type: GET_USER_FAILED,
-          });
+          dispatch(getUserFailed());
         }
       })
       .catch(() => {
-        dispatch({ type: GET_USER_FAILED });
+        dispatch(getUserFailed());
       });
   };
 };
@@ -135,11 +134,9 @@ export const updateUser = (user) => {
             payload: res.user,
           });
         } else {
-          dispatch({
-            type: UPDATE_USER_FAILED,
-          });
+          dispatch(updateUserFailed());
         }
       })
-      .catch(() => dispatch({ type: UPDATE_USER_FAILED }));
+      .catch(() => dispatch(updateUserFailed()));
   };
 };

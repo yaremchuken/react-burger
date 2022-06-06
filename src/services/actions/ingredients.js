@@ -1,10 +1,9 @@
+import { getIngredientsFailed } from '../action-creators/ingredients-action-creator';
 import { fetchIngredients } from '../apiService';
 
 export const GET_INGREDIENTS_REQUEST = 'GET_INGREDIENTS_REQUEST';
 export const GET_INGREDIENTS_SUCCESS = 'GET_INGREDIENTS_SUCCESS';
 export const GET_INGREDIENTS_FAILED = 'GET_INGREDIENTS_FAILED';
-
-export const CHOOSE_INGREDIENT = 'CHOOSE_INGREDIENT';
 
 export const getIngredients = () => {
   return (dispatch) => {
@@ -20,11 +19,9 @@ export const getIngredients = () => {
             ingredients: res.data,
           });
         } else {
-          dispatch({
-            type: GET_INGREDIENTS_FAILED,
-          });
+          dispatch(getIngredientsFailed());
         }
       })
-      .catch(() => dispatch({ type: GET_INGREDIENTS_FAILED }));
+      .catch(() => dispatch(getIngredientsFailed()));
   };
 };
