@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const IngredientType = PropTypes.shape({
-  uniqueId: PropTypes.number,
+  uniqueId: PropTypes.string,
   _id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['bun', 'main', 'sauce']),
@@ -14,4 +14,10 @@ export const IngredientType = PropTypes.shape({
   image_mobile: PropTypes.string.isRequired,
   image_large: PropTypes.string.isRequired,
   __v: PropTypes.number,
+});
+
+export const UserType = PropTypes.shape({
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  password: PropTypes.string,
 });

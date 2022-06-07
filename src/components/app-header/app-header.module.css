@@ -28,6 +28,11 @@
   cursor: pointer;
 }
 
+.navbarLink {
+  text-decoration: none;
+  color: white;
+}
+
 .leftBar {
   grid-column: 1 / span 2;
   grid-row: 1;

@@ -1,4 +1,4 @@
-import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../actions/burger';
+import { ADD_INGREDIENT, CLEAR_COMPOSITION, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../actions/burger';
 
 const initialState = {
   composition: [],
@@ -29,6 +29,11 @@ export const burgerReducer = (state = initialState, action) => {
         ...state,
         composition,
         price: totalPrice(composition),
+      };
+
+    case CLEAR_COMPOSITION:
+      return {
+        ...initialState,
       };
 
     case SORT_INGREDIENTS:

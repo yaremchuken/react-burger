@@ -5,33 +5,24 @@ import { useDrag, useDrop } from 'react-dnd';
 import { IngredientType } from '../../utils/types';
 import styles from './burger-ingredient.module.css';
 
-const BurgerIngredient = (props) => {
-  const { ingredient, idx, closeHandler, sortHandler } = props;
-
+const BurgerIngredient = ({ ingredient, idx, closeHandler, sortHandler }) => {
   const ref = useRef();
 
   const [, drop] = useDrop({
     accept: 'sorting',
     drop: (item, monitor) => {
-      if (item.idx === idx) {
-        return;
-      }
-
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-      if (item.idx < idx && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      if (item.idx > idx && hoverClientY > hoverMiddleY) {
-        return;
+      let onTop = false;
+      if (hoverClientY < hoverMiddleY) {
+        onTop = true;
       }
 
       // +1 т.к. нулевой индекс в редюсере занимает булка, которую двигать нельзя
-      sortHandler(item.idx + 1, idx + 1);
+      sortHandler(item.idx + 1, idx + (item.idx < idx ? 0 : 1) + (onTop ? 0 : 1), onTop);
     },
   });
 
@@ -93,7 +84,8 @@ const BurgerIngredient = (props) => {
 BurgerIngredient.propTypes = {
   ingredient: IngredientType,
   idx: PropTypes.number.isRequired,
-  closeHandler: PropTypes.func.isRequired,
+  closeHandler: PropTypes.func,
+  sortHandler: PropTypes.func,
 };
 
 export default BurgerIngredient;

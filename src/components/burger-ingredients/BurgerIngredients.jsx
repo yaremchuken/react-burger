@@ -1,7 +1,7 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { CHOOSE_INGREDIENT } from '../../services/actions/ingredients';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import IngredientCard from '../ingredient-card/IngredientCard';
 import styles from './burger-ingredients.module.css';
 
@@ -12,7 +12,8 @@ const types = [
 ];
 
 const BurgerIngredients = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { ingredients } = useSelector((store) => store.ingredients);
 
@@ -24,11 +25,12 @@ const BurgerIngredients = () => {
   const mainRef = useRef();
 
   const onIngredientChoose = (id) => {
-    dispatch({ type: CHOOSE_INGREDIENT, ingredient: ingredients.find((i) => i._id === id) });
+    const pathname = `/ingredients/${id}`;
+    navigate(pathname, { state: { background: { ...location, pathname } } });
   };
 
   useEffect(() => {
-    if (bunRef && holderOffset === 0) {
+    if (bunRef.current && holderOffset === 0) {
       setHolderOffset(bunRef.current.getBoundingClientRect().y);
     }
   }, [bunRef, holderOffset]);
@@ -47,6 +49,10 @@ const BurgerIngredients = () => {
   const getYOffset = (key, ref) => {
     return { key, yPos: Math.abs(ref.current.getBoundingClientRect().y - holderOffset) };
   };
+
+  if (ingredients.length === 0) {
+    return null;
+  }
 
   return (
     <section className={styles.burgerIngredients}>

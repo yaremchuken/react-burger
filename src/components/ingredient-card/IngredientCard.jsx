@@ -5,9 +5,8 @@ import { useSelector } from 'react-redux';
 import { IngredientType } from '../../utils/types';
 import styles from './ingredient-card.module.css';
 
-const IngredientCard = (props) => {
-  const { clickHandler } = props;
-  const { _id, name, image, price, type } = props.ingredient;
+const IngredientCard = ({ ingredient, clickHandler }) => {
+  const { _id, name, image, price, type } = ingredient;
 
   const { composition } = useSelector((store) => store.burger);
   let count = composition.filter((ing) => ing._id === _id).length;
@@ -18,7 +17,7 @@ const IngredientCard = (props) => {
 
   const [{ opacity }, ref] = useDrag({
     type: 'ingredient',
-    item: { id: _id },
+    item: { id: _id, type },
     collect: (monitor) => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),

@@ -1,16 +1,9 @@
-import {
-  CHOOSE_INGREDIENT,
-  GET_INGREDIENTS_FAILED,
-  GET_INGREDIENTS_REQUEST,
-  GET_INGREDIENTS_SUCCESS,
-} from '../actions/ingredients';
+import { GET_INGREDIENTS_FAILED, GET_INGREDIENTS_REQUEST, GET_INGREDIENTS_SUCCESS } from '../actions/ingredients';
 
 const initialState = {
   ingredients: [],
   ingredientsRequested: false,
   ingredientsFailed: false,
-
-  chosenIngredient: undefined,
 };
 
 export const ingredientsReducer = (state = initialState, action) => {
@@ -34,12 +27,6 @@ export const ingredientsReducer = (state = initialState, action) => {
       return {
         ...initialState,
         ingredientsFailed: true,
-      };
-
-    case CHOOSE_INGREDIENT:
-      return {
-        ...state,
-        chosenIngredient: action.ingredient,
       };
 
     default:

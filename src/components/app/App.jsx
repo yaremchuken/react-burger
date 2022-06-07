@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
-import { CHOOSE_INGREDIENT, getIngredients } from '../../services/actions/ingredients';
+import { useNavigate } from 'react-router-dom';
+import { getIngredients } from '../../services/actions/ingredients';
 import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
+import { getUserByToken } from '../../services/actions/user';
+import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
+import { getCookie } from '../../utils/utils';
 import AppHeader from '../app-header/AppHeader';
-import BurgerConstructor from '../burger-constructor/BurgerConstructor';
-import BurgerIngredients from '../burger-ingredients/BurgerIngredients';
-import IngredientDetails from '../ingredient-details/IngredientDetails';
+import { AppRoutes } from '../app-routes/AppRoutes';
 import Loader from '../loader/Loader';
 import Modal from '../modal/Modal';
 import OrderDetails from '../order-details/OrderDetails';
@@ -15,19 +15,31 @@ import styles from './app.module.css';
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { ingredients, ingredientsRequested, ingredientsFailed, chosenIngredient } = useSelector(
-    (store) => store.ingredients
-  );
+  const { ingredients, ingredientsRequested, ingredientsFailed } = useSelector((store) => store.ingredients);
+
   const { orderNumber, orderRequested } = useSelector((store) => store.order);
+  const { user } = useSelector((store) => store.user);
 
   useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
+    if (!user) {
+      const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
+      if (token) {
+        dispatch(getUserByToken(token));
+      }
+    }
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    if (ingredients.length === 0) {
+      dispatch(getIngredients());
+    }
+  }, [ingredients, dispatch]);
 
   const closeModals = () => {
     dispatch({ type: CLEAR_ORDER_NUMBER });
-    dispatch({ type: CHOOSE_INGREDIENT });
+    navigate('/');
   };
 
   if (ingredientsFailed) {
@@ -44,24 +56,11 @@ const App = () => {
         <Loader message={'Обрабатываем Ваш заказ'} />
       ) : (
         <>
-          {ingredients.length > 0 && (
-            <div className={styles.main}>
-              <DndProvider backend={HTML5Backend}>
-                <BurgerIngredients />
-                <BurgerConstructor />
-              </DndProvider>
-            </div>
-          )}
+          <AppRoutes closeModals={closeModals} />
 
           {orderNumber && (
             <Modal title="Детали заказа" onCloseDemand={closeModals}>
               <OrderDetails />
-            </Modal>
-          )}
-
-          {chosenIngredient && (
-            <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
-              <IngredientDetails />
             </Modal>
           )}
         </>
