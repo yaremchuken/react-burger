@@ -4,7 +4,7 @@
 }
 
 .ingredientList {
-  margin: 16px 0;
+  margin: 0;
   padding: 0;
 
   max-height: calc(100vh - 590px);
@@ -12,7 +12,6 @@
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
   list-style-type: none;
 
   scrollbar-color: #8585ad #2f2f37;
