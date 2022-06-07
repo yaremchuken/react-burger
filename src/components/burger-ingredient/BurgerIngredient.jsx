@@ -5,9 +5,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { IngredientType } from '../../utils/types';
 import styles from './burger-ingredient.module.css';
 
-const BurgerIngredient = (props) => {
-  const { ingredient, idx, closeHandler, sortHandler } = props;
-
+const BurgerIngredient = ({ ingredient, idx, closeHandler, sortHandler }) => {
   const ref = useRef();
 
   const [, drop] = useDrop({
@@ -86,7 +84,8 @@ const BurgerIngredient = (props) => {
 BurgerIngredient.propTypes = {
   ingredient: IngredientType,
   idx: PropTypes.number.isRequired,
-  closeHandler: PropTypes.func.isRequired,
+  closeHandler: PropTypes.func,
+  sortHandler: PropTypes.func,
 };
 
 export default BurgerIngredient;

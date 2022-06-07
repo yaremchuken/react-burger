@@ -65,24 +65,28 @@ const BurgerConstructor = () => {
     <section className={`${styles.burgerConstructor} pt-15`} ref={target} style={{ opacity }}>
       {bun ? (
         <>
-          <BurgerIngredient key={-1} ingredient={bun} idx={0} closeHandler={() => {}} />
+          <BurgerIngredient key={-1} ingredient={bun} idx={0} />
 
-          <ul className={styles.ingredientList}>
-            {composition
-              .slice(1)
-              .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
-              .map((ingredient, idx) => (
-                <BurgerIngredient
-                  key={ingredient.uniqueId}
-                  ingredient={ingredient}
-                  idx={idx}
-                  closeHandler={() => removeIngredient(ingredient)}
-                  sortHandler={sortIngredients}
-                />
-              ))}
-          </ul>
+          {composition.length === 1 ? (
+            <p className={`${styles.empty} text text_type_main-medium`}>Теперь добавляйте ингредиенты</p>
+          ) : (
+            <ul className={styles.ingredientList}>
+              {composition
+                .slice(1)
+                .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
+                .map((ingredient, idx) => (
+                  <BurgerIngredient
+                    key={ingredient.uniqueId}
+                    ingredient={ingredient}
+                    idx={idx}
+                    closeHandler={() => removeIngredient(ingredient)}
+                    sortHandler={sortIngredients}
+                  />
+                ))}
+            </ul>
+          )}
 
-          <BurgerIngredient key={-2} ingredient={bun} idx={composition.length} closeHandler={() => {}} />
+          <BurgerIngredient key={-2} ingredient={bun} idx={composition.length} />
 
           <div className={styles.order}>
             <div className={styles.orderTotal}>
