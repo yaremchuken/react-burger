@@ -1,0 +1,42 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: left;
+}
+
+.holder {
+  display: flex;
+  gap: 60px;
+}
+
+.feedItems {
+  margin: 0;
+  padding: 0;
+  padding-right: 8px;
+
+  max-height: calc(100vh - 300px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  list-style-type: none;
+
+  overflow-y: auto;
+  scrollbar-color: #8585ad #2f2f37;
+}
+
+.feedItems::-webkit-scrollbar {
+  width: 8px;
+}
+
+.feedItems::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.feedItems::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
+}

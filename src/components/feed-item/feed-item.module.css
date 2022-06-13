@@ -1,0 +1,77 @@
+.feedItem {
+  margin: 0;
+  padding: 24px;
+
+  width: 584px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  background-color: #1c1c21;
+  border-radius: 40px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+}
+
+.id {
+  padding: 0;
+  margin: 0;
+}
+
+.date {
+  padding: 0;
+  margin: 0;
+}
+
+.leftAligned {
+  text-align: left;
+}
+
+.composition {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingredients {
+  position: relative;
+  display: flex;
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+
+  border: solid 2px #801ab2;
+  border-radius: 100px;
+
+  background-size: cover;
+  background-position: center;
+  background-color: #131316;
+}
+
+.image:not(:first-child) {
+  margin-left: -16px;
+}
+
+.ingredientImage {
+  width: 112px;
+  height: 56px;
+}
+
+.counter {
+  position: absolute;
+  top: 24px;
+  right: 26px;
+  z-index: 100;
+}
+
+.price {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}

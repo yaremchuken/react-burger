@@ -35,31 +35,31 @@
   text-align: left;
 }
 
-.fieldset {
+.orders {
+  margin: 0;
   padding: 0;
+  padding-right: 8px;
+
+  max-height: calc(100vh - 300px);
+
   display: flex;
   flex-direction: column;
   gap: 24px;
 
-  border: none;
-  outline: none;
+  list-style-type: none;
+
+  overflow-y: auto;
+  scrollbar-color: #8585ad #2f2f37;
 }
 
-.fieldset > div > div {
-  width: 480px;
+.orders::-webkit-scrollbar {
+  width: 8px;
 }
 
-.controllers {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 28px;
+.orders::-webkit-scrollbar-track {
+  background-color: #2f2f37;
 }
 
-.cancelButton {
-  color: #4c4cff;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  cursor: pointer;
+.orders::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
 }

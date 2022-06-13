@@ -21,3 +21,12 @@ export const UserType = PropTypes.shape({
   email: PropTypes.string.isRequired,
   password: PropTypes.string,
 });
+
+export const OrderType = PropTypes.shape({
+  _id: PropTypes.string.isRequired,
+  ingredients: PropTypes.arrayOf(PropTypes.string).isRequired,
+  status: PropTypes.string.isRequired,
+  number: PropTypes.number.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  updatedAt: PropTypes.string.isRequired,
+});
