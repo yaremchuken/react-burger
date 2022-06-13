@@ -4,6 +4,11 @@
   justify-content: center;
 }
 
+.title {
+  max-width: 600px;
+  text-align: left;
+}
+
 .leftAligned {
   text-align: left;
 }
@@ -48,7 +53,7 @@
 }
 
 .itemName {
-  max-width: 300px;
+  width: 300px;
 }
 
 .image {

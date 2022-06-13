@@ -21,11 +21,13 @@
   padding: 0;
 
   width: 280px;
+  max-height: 180px;
 
   display: flex;
   flex-direction: column;
   gap: 8px;
 
+  flex-wrap: wrap;
   list-style-type: none;
 }
 
