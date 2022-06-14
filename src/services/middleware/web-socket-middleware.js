@@ -3,14 +3,12 @@ export const socketMiddleware = (url, actions) => {
     let socket = null;
 
     return (next) => (action) => {
-      const { dispatch, getState } = store;
+      const { dispatch } = store;
       const { type, payload } = action;
-      const { wsInit, wsSendMessage, wsClose, onOpen, onError, onMessage } = actions;
-      const { user } = getState().user;
+      const { wsInit, wsClose, onOpen, onError, onClose, onMessage, onSend } = actions;
 
       if (type === wsInit) {
-        const path =
-          url + (action.payload?.path ?? '') + (action.payload?.token ? '?token=' + action.payload.token : '');
+        const path = url + (payload?.path ?? '') + (payload?.token ? '?token=' + payload.token : '');
         socket = new WebSocket(path);
       }
 
@@ -23,6 +21,10 @@ export const socketMiddleware = (url, actions) => {
           dispatch({ type: onError, payload: event });
         };
 
+        socket.onclose = (event) => {
+          dispatch({ type: onClose, payload: event });
+        };
+
         socket.onmessage = (event) => {
           const result = JSON.parse(event.data);
           if (result.success) {
@@ -32,14 +34,12 @@ export const socketMiddleware = (url, actions) => {
           }
         };
 
+        socket.send = (event) => {
+          dispatch({ type: onSend, payload: event });
+        };
+
         if (type === wsClose && socket.readyState === WebSocket.OPEN) {
           socket.close();
-        }
-
-        if (type === wsSendMessage) {
-          const message = payload;
-          message.token = user.token;
-          socket.send(JSON.stringify(message));
         }
       }
 
