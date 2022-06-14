@@ -51,7 +51,7 @@ export const dateString = (createdAt) => {
   const dayDiff = daysAgo(created);
 
   let daysOffset =
-    dayDiff === 0 ? 'Сегодня' : dayDiff === 1 ? 'Вчера' : `${daysAgo} ${daysAgo < 5 ? 'дня' : 'дней'} назад`;
+    dayDiff === 0 ? 'Сегодня' : dayDiff === 1 ? 'Вчера' : `${dayDiff} ${dayDiff < 5 ? 'дня' : 'дней'} назад`;
 
   return `${daysOffset}, ${pad(created.getHours())}:${pad(created.getMinutes())} i-GMT+3`;
 };

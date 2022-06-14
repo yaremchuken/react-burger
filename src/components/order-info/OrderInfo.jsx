@@ -1,17 +1,18 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { WS_CONNECTION_START } from '../../services/actions/web-socket';
-import { dateString, mapOrderStatus } from '../../utils/utils';
+import { useLocation, useParams } from 'react-router-dom';
+import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
+import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
+import { dateString, getCookie, mapOrderStatus } from '../../utils/utils';
 import styles from './order-info.module.css';
 
 export const OrderInfo = () => {
-  const params = useParams();
-
   const { ingredients } = useSelector((store) => store.ingredients);
-  const { wsConnectionRequested, wsConnected, orders } = useSelector((store) => store.webSocket);
+  const { wsRequested, wsConnected, orders } = useSelector((store) => store.webSocket);
 
+  const params = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const [order, setOrder] = useState();
@@ -22,10 +23,13 @@ export const OrderInfo = () => {
   };
 
   useEffect(() => {
-    if (!wsConnected && !wsConnectionRequested) {
-      dispatch({ type: WS_CONNECTION_START });
+    if (!wsConnected && !wsRequested) {
+      const profile = location.pathname.startsWith('/profile');
+      dispatch(
+        wsConnectionStart(!profile ? '/all' : '', profile && getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', ''))
+      );
     }
-  }, [wsConnected, wsConnectionRequested, dispatch]);
+  }, [wsConnected, wsRequested, dispatch, location]);
 
   useEffect(() => {
     if (orders.length > 0 && composition.length === 0) {
@@ -41,6 +45,8 @@ export const OrderInfo = () => {
       );
     }
   }, [ingredients, composition, orders, params]);
+
+  useEffect(() => () => dispatch(wsConnectionClose()), [dispatch]);
 
   if (!order) {
     return null;

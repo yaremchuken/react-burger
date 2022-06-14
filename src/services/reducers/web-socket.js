@@ -1,6 +1,5 @@
-import { number } from 'prop-types';
 import {
-  WS_CONNECTION_CLOSED,
+  WS_CONNECTION_CLOSE,
   WS_CONNECTION_ERROR,
   WS_CONNECTION_START,
   WS_CONNECTION_SUCCESS,
@@ -8,12 +7,12 @@ import {
 } from '../actions/web-socket';
 
 const initialState = {
-  wsConnectionRequested: false,
+  wsRequested: false,
   wsConnected: false,
 
   orders: [],
-  total: number,
-  totalToday: number,
+  total: undefined,
+  totalToday: undefined,
 };
 
 export const webSocketReducer = (state = initialState, action) => {
@@ -21,27 +20,27 @@ export const webSocketReducer = (state = initialState, action) => {
     case WS_CONNECTION_START:
       return {
         ...state,
-        wsConnectionRequested: true,
+        wsRequested: true,
         wsConnected: false,
       };
 
     case WS_CONNECTION_SUCCESS:
       return {
         ...state,
-        wsConnectionRequested: false,
+        wsRequested: false,
         wsConnected: true,
       };
 
     case WS_CONNECTION_ERROR:
       return {
         ...state,
+        wsRequested: false,
         wsConnected: false,
       };
 
-    case WS_CONNECTION_CLOSED:
+    case WS_CONNECTION_CLOSE:
       return {
-        ...state,
-        wsConnected: false,
+        ...initialState,
       };
 
     case WS_GET_MESSAGE:

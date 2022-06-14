@@ -5,11 +5,13 @@ export const socketMiddleware = (url, actions) => {
     return (next) => (action) => {
       const { dispatch, getState } = store;
       const { type, payload } = action;
-      const { wsInit, wsSendMessage, onOpen, onClose, onError, onMessage } = actions;
+      const { wsInit, wsSendMessage, wsClose, onOpen, onError, onMessage } = actions;
       const { user } = getState().user;
 
       if (type === wsInit) {
-        socket = new WebSocket(url);
+        const path =
+          url + (action.payload?.path ?? '') + (action.payload?.token ? '?token=' + action.payload.token : '');
+        socket = new WebSocket(path);
       }
 
       if (socket) {
@@ -30,9 +32,9 @@ export const socketMiddleware = (url, actions) => {
           }
         };
 
-        socket.onclose = (event) => {
-          dispatch({ type: onClose, payload: event });
-        };
+        if (type === wsClose && socket.readyState === WebSocket.OPEN) {
+          socket.close();
+        }
 
         if (type === wsSendMessage) {
           const message = payload;

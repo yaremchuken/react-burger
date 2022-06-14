@@ -1,18 +1,23 @@
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FeedItem } from '../../components/feed-item/FeedItem';
 import { ProfileForm } from '../../components/profile-form/ProfileForm';
 import { logoutUser } from '../../services/actions/user';
-import { REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
+import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
+import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
+import { getCookie } from '../../utils/utils';
 import styles from './profile.module.css';
 
 export const Profile = () => {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { wsRequested, wsConnected, orders } = useSelector((store) => store.webSocket);
+
   const logout = () => {
-    dispath(logoutUser(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
+    dispatch(logoutUser(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
   };
 
   const onOrderChoose = (id) => {
@@ -20,11 +25,13 @@ export const Profile = () => {
     navigate(pathname, { state: { background: { ...location, pathname } } });
   };
 
-  const random = () => {
-    return Array.from(Array(Math.floor(Math.random() * 5) + 5).keys()).map((_, i) => (
-      <FeedItem onClickHandler={onOrderChoose} key={i} withStatus={true} />
-    ));
-  };
+  useEffect(() => {
+    if (!wsConnected && !wsRequested) {
+      dispatch(wsConnectionStart('', getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', '')));
+    }
+  }, [wsConnected, wsRequested, dispatch]);
+
+  useEffect(() => () => dispatch(wsConnectionClose()), [dispatch]);
 
   return (
     <div className={styles.profile}>
@@ -57,7 +64,13 @@ export const Profile = () => {
 
       {location.pathname === '/profile' && <ProfileForm />}
 
-      {location.pathname.includes('/orders') && <ul className={styles.orders}>{random()}</ul>}
+      {location.pathname.includes('/orders') && (
+        <ul className={styles.orders}>
+          {orders.map((order) => (
+            <FeedItem order={order} onClickHandler={() => onOrderChoose(order.number)} key={order.number} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

@@ -7,8 +7,7 @@ export const FeedStats = () => {
   const done = orders.filter((order, idx) => idx < 10 && order.status === 'done');
   const pending = orders.filter((order, idx) => idx < 10 && order.status === 'pending');
 
-  // Почему-то сначала из стора приходит функция checkType вместо значений total и totalToday
-  if (typeof total === 'function') {
+  if (!total) {
     return null;
   }
 

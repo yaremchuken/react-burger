@@ -1,15 +1,10 @@
 .feed {
   display: flex;
-  flex-direction: column;
+  gap: 60px;
 }
 
 .header {
   text-align: left;
-}
-
-.holder {
-  display: flex;
-  gap: 60px;
 }
 
 .feedItems {
