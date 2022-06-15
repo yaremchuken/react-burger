@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { OrderType } from '../../utils/types';
-import { dateString, mapOrderStatus } from '../../utils/utils';
+import { dateString, getTotal, mapOrderStatus } from '../../utils/utils';
 import styles from './feed-item.module.css';
 
 export const FeedItem = ({ order, withStatus, onClickHandler }) => {
@@ -11,21 +11,19 @@ export const FeedItem = ({ order, withStatus, onClickHandler }) => {
 
   const [images, setImages] = useState([]);
 
+  const total = () => {
+    return getTotal(order.ingredients.map((id) => ingredients.find((i) => i._id === id)));
+  };
+
   useEffect(() => {
     if (order && images.length === 0) {
       setImages(order.ingredients.map((id) => ingredients.find((i) => i._id === id).image));
     }
   }, [order, images, ingredients]);
 
-  if (!images) {
+  if (!order || !ingredients || !images) {
     return null;
   }
-
-  const total = order.ingredients.reduce((res, id) => {
-    const ingredient = ingredients.find((i) => i._id === id);
-    res += ingredient.price;
-    return res;
-  }, 0);
 
   return (
     <li className={styles.feedItem} onClick={onClickHandler}>
@@ -71,7 +69,7 @@ export const FeedItem = ({ order, withStatus, onClickHandler }) => {
           )}
         </div>
         <div className={`${styles.price} text_type_digits-default`}>
-          {total} <CurrencyIcon type="primary" />
+          {total()} <CurrencyIcon type="primary" />
         </div>
       </div>
     </li>

@@ -66,3 +66,7 @@ const daysAgo = (checkDay) => {
 const pad = (num) => {
   return num.toString().padStart(2, '0');
 };
+
+export const getTotal = (ingredients) => {
+  return ingredients.map((i) => i.price).reduce((total, price) => (total += price), 0);
+};

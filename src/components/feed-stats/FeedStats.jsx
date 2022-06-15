@@ -4,15 +4,15 @@ import styles from './feed-stats.module.css';
 export const FeedStats = () => {
   const { orders, total, totalToday } = useSelector((store) => store.webSocket);
 
-  const done = orders.filter((order, idx) => idx < 10 && order.status === 'done');
-  const pending = orders.filter((order, idx) => idx < 10 && order.status === 'pending');
-
-  if (!total) {
+  if (!orders || !total || !totalToday) {
     return null;
   }
 
+  const done = orders.filter((order, idx) => idx < 10 && order.status === 'done');
+  const pending = orders.filter((order, idx) => idx < 10 && order.status === 'pending');
+
   return (
-    <div className={styles.feedStats}>
+    <div className={`${styles.feedStats} pt-15`}>
       <div className={styles.statuses}>
         <div className={styles.heading}>
           <p className="text text_type_main-medium pb-6">Готовы:</p>

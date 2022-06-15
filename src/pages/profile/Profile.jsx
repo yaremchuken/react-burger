@@ -64,11 +64,13 @@ export const Profile = () => {
 
       {location.pathname === '/profile' && <ProfileForm />}
 
-      {location.pathname.includes('/orders') && (
+      {location.pathname.includes('/orders') && orders && (
         <ul className={styles.orders}>
-          {orders.map((order) => (
-            <FeedItem order={order} onClickHandler={() => onOrderChoose(order.number)} key={order.number} />
-          ))}
+          {orders
+            .sort((a, b) => b.number - a.number)
+            .map((order) => (
+              <FeedItem order={order} onClickHandler={() => onOrderChoose(order.number)} key={order.number} />
+            ))}
         </ul>
       )}
     </div>
