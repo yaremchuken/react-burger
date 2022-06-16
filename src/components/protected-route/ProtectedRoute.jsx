@@ -14,7 +14,7 @@ const ProtectedRoute = ({ user, children }) => {
 
 ProtectedRoute.propTypes = {
   user: UserType,
-  children: PropTypes.object.isRequired,
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };
 
 export default ProtectedRoute;

@@ -21,9 +21,15 @@ const AppHeader = () => {
                 </Link>
               </li>
 
-              <li className={`${styles.navbarElement} pt-4 pb-4 pr-5 pl-5`}>
-                <ListIcon type="secondary" />
-                <p className="text text_type_main-default text_color_inactive">Лента заказов</p>
+              <li className={`${styles.navbarElement} pt-4 pb-4 pr-5 pl-5`} onClick={() => navigate('/feed')}>
+                <ListIcon type={`${location.pathname.startsWith('/feed') ? 'primary' : 'secondary'}`} />
+                <p
+                  className={`text text_type_main-default ${
+                    !location.pathname.startsWith('/feed') && 'text_color_inactive'
+                  }`}
+                >
+                  Лента заказов
+                </p>
               </li>
             </ul>
           </li>

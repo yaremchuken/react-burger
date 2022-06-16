@@ -32,3 +32,41 @@ export const dropTokens = () => {
   setCookie(ACCESS_TOKEN_COOKIE_PATH, '', 0);
   localStorage.removeItem(REFRESH_TOKEN_LOCAL_PATH);
 };
+
+export const mapOrderStatus = (order) => {
+  switch (order.status) {
+    case 'created':
+      return 'Создан';
+    case 'pending':
+      return 'Готовится';
+    case 'done':
+      return 'Выполнен';
+    default:
+      throw new Error(`Unknown order status ${order.status}`);
+  }
+};
+
+export const dateString = (createdAt) => {
+  const created = new Date(createdAt);
+  const dayDiff = daysAgo(created);
+
+  let daysOffset =
+    dayDiff === 0 ? 'Сегодня' : dayDiff === 1 ? 'Вчера' : `${dayDiff} ${dayDiff < 5 ? 'дня' : 'дней'} назад`;
+
+  return `${daysOffset}, ${pad(created.getHours())}:${pad(created.getMinutes())} i-GMT+3`;
+};
+
+const daysAgo = (checkDay) => {
+  let dayStart = new Date();
+  dayStart.setUTCHours(0, 0, 0, 0);
+
+  return Math.ceil((dayStart - checkDay) / 1000 / 60 / 60 / 24);
+};
+
+const pad = (num) => {
+  return num.toString().padStart(2, '0');
+};
+
+export const getTotal = (ingredients) => {
+  return ingredients.map((i) => i.price).reduce((total, price) => (total += price), 0);
+};

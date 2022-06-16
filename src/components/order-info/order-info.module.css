@@ -1,0 +1,87 @@
+.orderInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  max-width: 600px;
+  text-align: left;
+}
+
+.leftAligned {
+  text-align: left;
+}
+
+.ingredients {
+  margin: 0 0 40px 0;
+  padding: 0 8px 0 0;
+
+  max-height: calc(100vh - 620px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  list-style-type: none;
+  overflow-y: auto;
+  scrollbar-color: #8585ad #2f2f37;
+}
+
+.ingredients::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ingredients::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.ingredients::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+}
+
+.itemReps {
+  display: flex;
+  align-items: center;
+}
+
+.itemName {
+  width: 300px;
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+
+  border: solid 2px #801ab2;
+  border-radius: 100px;
+
+  background-size: cover;
+  background-position: center;
+  background-color: #131316;
+}
+
+.priceTag {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

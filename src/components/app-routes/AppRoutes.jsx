@@ -13,6 +13,9 @@ import IngredientDetails from '../ingredient-details/IngredientDetails';
 import Modal from '../modal/Modal';
 import ProtectedRoute from '../protected-route/ProtectedRoute';
 import UnauthorizedRoute from '../unauthorized-route/UnauthorizedRoute';
+import { Feed } from '../../pages/feed/Feed';
+import { Order } from '../../pages/order/Order';
+import { OrderInfo } from '../order-info/OrderInfo';
 
 export const AppRoutes = ({ closeModals }) => {
   const { user } = useSelector((store) => store.user);
@@ -53,6 +56,61 @@ export const AppRoutes = ({ closeModals }) => {
         }
       />
 
+      {background && (
+        <>
+          <Route
+            path="/ingredients/:id"
+            element={
+              <>
+                <Homepage />
+                <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
+                  <IngredientDetails />
+                </Modal>
+              </>
+            }
+          />
+
+          <Route
+            path="/feed/:id"
+            element={
+              <>
+                <Feed />
+                <Modal onCloseDemand={closeModals}>
+                  <OrderInfo />
+                </Modal>
+              </>
+            }
+          />
+
+          <Route
+            path="/profile/orders/:id"
+            element={
+              <ProtectedRoute user={user}>
+                <Profile />
+                <Modal onCloseDemand={closeModals}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
+            }
+          />
+        </>
+      )}
+
+      <Route path="/ingredients/:id" element={<Ingredients />} />
+
+      <Route path="/feed/:id" element={<Order />} />
+
+      <Route path="/feed" element={<Feed />} />
+
+      <Route
+        path="/profile/orders/:id"
+        element={
+          <ProtectedRoute user={user}>
+            <Order />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/profile/*"
         element={
@@ -61,22 +119,6 @@ export const AppRoutes = ({ closeModals }) => {
           </ProtectedRoute>
         }
       />
-
-      {background && (
-        <Route
-          path="/ingredients/:id"
-          element={
-            <>
-              <Homepage />
-              <Modal title="Детали ингредиента" onCloseDemand={closeModals}>
-                <IngredientDetails />
-              </Modal>
-            </>
-          }
-        />
-      )}
-
-      <Route path="/ingredients/:id" element={<Ingredients />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

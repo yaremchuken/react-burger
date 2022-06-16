@@ -1,75 +1,37 @@
-import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { logoutUser, updateUser } from '../../services/actions/user';
-import { REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
+import { FeedItem } from '../../components/feed-item/FeedItem';
+import { ProfileForm } from '../../components/profile-form/ProfileForm';
+import { logoutUser } from '../../services/actions/user';
+import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
+import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
+import { getCookie } from '../../utils/utils';
 import styles from './profile.module.css';
 
 export const Profile = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [edits, setEdits] = useState([]);
-
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const dispath = useDispatch();
 
-  const { user } = useSelector((store) => store.user);
-
-  useEffect(() => {
-    if (user && !name) {
-      setName(user.name);
-      setEmail(user.email);
-    }
-  }, [user, name, setName, setEmail]);
-
-  const updateUserData = (e) => {
-    e.preventDefault();
-    const form = { name, email };
-    if (password.length > 0) {
-      form.password = password;
-    }
-    dispath(updateUser(form));
-    setEdits([]);
-  };
+  const { wsRequested, wsConnected, orders } = useSelector((store) => store.webSocket);
 
   const logout = () => {
-    dispath(logoutUser(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
+    dispatch(logoutUser(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
   };
 
-  const onChangeValueClick = (ref) => {
-    if (edits.includes(ref.current.name)) {
-      setEdits(edits.filter((e) => e !== ref.current.name));
-    } else {
-      setEdits([...edits, ref.current.name]);
-      setTimeout(() => ref.current.focus(), 0);
+  const onOrderChoose = (id) => {
+    const pathname = `/profile/orders/${id}`;
+    navigate(pathname, { state: { background: { ...location, pathname } } });
+  };
+
+  useEffect(() => {
+    if (!wsConnected && !wsRequested) {
+      dispatch(wsConnectionStart('', getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', '')));
     }
-  };
+  }, [wsConnected, wsRequested, dispatch]);
 
-  const isDirty = () => {
-    if (!user) {
-      return;
-    }
-    return password.length > 0 || user.name !== name || user.email !== email;
-  };
-
-  const clearChanges = () => {
-    setName(user.name);
-    setEmail(user.email);
-    setPassword('');
-    setEdits([]);
-  };
-
-  if (!user) {
-    return null;
-  }
+  useEffect(() => () => dispatch(wsConnectionClose()), [dispatch]);
 
   return (
     <div className={styles.profile}>
@@ -100,57 +62,17 @@ export const Profile = () => {
         </p>
       </div>
 
-      <form>
-        <fieldset className={`${styles.fieldset} mb-6`}>
-          <Input
-            type="text"
-            name="name"
-            key={'name'}
-            placeholder="Имя"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            ref={nameRef}
-            icon={`${edits.includes('name') ? 'CloseIcon' : 'EditIcon'}`}
-            onIconClick={(e) => onChangeValueClick(nameRef)}
-            disabled={!edits.includes('name')}
-          />
-          <Input
-            type="text"
-            name="email"
-            key={'email'}
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            ref={emailRef}
-            icon={`${edits.includes('email') ? 'CloseIcon' : 'EditIcon'}`}
-            onIconClick={(e) => onChangeValueClick(emailRef)}
-            disabled={!edits.includes('email')}
-          />
-          <Input
-            type="password"
-            name="password"
-            key={'password'}
-            placeholder="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            ref={passwordRef}
-            icon={`${edits.includes('password') ? 'CloseIcon' : 'EditIcon'}`}
-            onIconClick={(e) => onChangeValueClick(passwordRef)}
-            disabled={!edits.includes('password')}
-          />
-        </fieldset>
+      {location.pathname === '/profile' && <ProfileForm />}
 
-        {isDirty() && (
-          <div className={styles.controllers}>
-            <button className={`text text_type_main-default ${styles.cancelButton}`} onClick={clearChanges}>
-              Отмена
-            </button>
-            <Button type="primary" size="medium" onClick={updateUserData}>
-              Сохранить
-            </Button>
-          </div>
-        )}
-      </form>
+      {location.pathname.includes('/orders') && orders && (
+        <ul className={styles.orders}>
+          {orders
+            .sort((a, b) => b.number - a.number)
+            .map((order) => (
+              <FeedItem order={order} onClickHandler={() => onOrderChoose(order.number)} key={order.number} />
+            ))}
+        </ul>
+      )}
     </div>
   );
 };

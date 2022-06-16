@@ -39,7 +39,7 @@ const App = () => {
 
   const closeModals = () => {
     dispatch({ type: CLEAR_ORDER_NUMBER });
-    navigate('/');
+    navigate(-1);
   };
 
   if (ingredientsFailed) {
