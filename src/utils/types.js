@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+// TODO: дропнуть эти пропы
 export const IngredientType = PropTypes.shape({
   uniqueId: PropTypes.string,
   _id: PropTypes.string.isRequired,
