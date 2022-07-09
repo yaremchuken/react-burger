@@ -1,5 +1,5 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { passwordResetRequested } from '../../services/actions/user';
@@ -7,12 +7,12 @@ import { forgotPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
 
 export const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState<string>('');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const submitHandler = (e) => {
+  const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
     forgotPassword(email)
       .then((res) => {

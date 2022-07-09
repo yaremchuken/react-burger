@@ -2,6 +2,8 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks';
+import { IngredientType } from '../../models/Ingredient';
+import { Order } from '../../models/Order';
 import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { dateString, getCookie, mapOrderStatus } from '../../utils/utils';
@@ -15,8 +17,8 @@ export const OrderInfo = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [order, setOrder] = useState();
-  const [composition, setComposition] = useState([]);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [composition, setComposition] = useState<ReadonlyArray<any>>([]);
 
   const total = () => {
     return composition.map((i) => i.ingredient.price * i.count).reduce((res, pr) => (res += pr), 0);
@@ -26,27 +28,36 @@ export const OrderInfo = () => {
     if (!wsConnected && !wsRequested) {
       const profile = location.pathname.startsWith('/profile');
       dispatch(
-        wsConnectionStart(!profile ? '/all' : '', profile && getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', ''))
+        wsConnectionStart(
+          profile ? '' : '/all',
+          profile ? getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', '') : undefined
+        )
       );
     }
   }, [wsConnected, wsRequested, dispatch, location]);
 
   useEffect(() => {
     if (orders.length > 0 && composition.length === 0) {
-      const order = orders.find((o) => o.number === Number(params.id));
+      const order = orders.find((o) => o.number === Number(params.id))!;
       const idsToCount = reduce(order.ingredients);
       setOrder(order);
       setComposition(
         idsToCount
           .map((item) => {
-            return { ingredient: ingredients.find((i) => i._id === item.id), count: item.count };
+            return { ingredient: ingredients.find((i) => i._id === item.id)!, count: item.count };
           })
-          .sort((a, b) => (a.ingredient.type === 'bun' ? -1 : a.ingredient._id - b.ingredient._id))
+          .sort((a, b) =>
+            a.ingredient.type === IngredientType.BUN ? -1 : a.ingredient._id.localeCompare(b.ingredient._id)
+          )
       );
     }
   }, [ingredients, composition, orders, params]);
 
-  useEffect(() => () => dispatch(wsConnectionClose()), [dispatch]);
+  useEffect(() => {
+    return () => {
+      dispatch(wsConnectionClose());
+    };
+  }, [dispatch]);
 
   if (!order) {
     return null;
@@ -87,8 +98,8 @@ export const OrderInfo = () => {
   );
 };
 
-const reduce = (ingredientIds) => {
-  let result = [];
+const reduce = (ingredientIds: ReadonlyArray<string>) => {
+  let result: Array<{ id: string; count: number }> = [];
   ingredientIds.forEach((id) => {
     const exist = result.find((i) => i.id === id);
     if (exist) {

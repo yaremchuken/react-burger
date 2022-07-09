@@ -20,7 +20,7 @@ export const Profile = () => {
     dispatch(logoutUser(localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH)));
   };
 
-  const onOrderChoose = (id) => {
+  const onOrderChoose = (id: number) => {
     const pathname = `/profile/orders/${id}`;
     navigate(pathname, { state: { background: { ...location, pathname } } });
   };
@@ -31,7 +31,11 @@ export const Profile = () => {
     }
   }, [wsConnected, wsRequested, dispatch]);
 
-  useEffect(() => () => dispatch(wsConnectionClose()), [dispatch]);
+  useEffect(() => {
+    return () => {
+      dispatch(wsConnectionClose());
+    };
+  }, [dispatch]);
 
   return (
     <div className={styles.profile}>

@@ -1,7 +1,8 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from '../../hooks';
+import { Ingredient } from '../../models/Ingredient';
 import IngredientCard from '../ingredient-card/IngredientCard';
 import styles from './burger-ingredients.module.css';
 
@@ -20,11 +21,11 @@ const BurgerIngredients = () => {
   const [current, setCurrent] = useState('buns');
   const [holderOffset, setHolderOffset] = useState(0);
 
-  const bunRef = useRef();
-  const sauceRef = useRef();
-  const mainRef = useRef();
+  const bunRef = useRef<HTMLDivElement | null>(null);
+  const sauceRef = useRef<HTMLDivElement | null>(null);
+  const mainRef = useRef<HTMLDivElement | null>(null);
 
-  const onIngredientChoose = (id) => {
+  const onIngredientChoose = (id: string) => {
     const pathname = `/ingredients/${id}`;
     navigate(pathname, { state: { background: { ...location, pathname } } });
   };
@@ -46,7 +47,10 @@ const BurgerIngredients = () => {
     }
   };
 
-  const getYOffset = (key, ref) => {
+  const getYOffset = (key: 'buns' | 'sauces' | 'mains', ref: MutableRefObject<HTMLDivElement | null>) => {
+    if (!ref.current) {
+      return { key, yPos: 0 };
+    }
     return { key, yPos: Math.abs(ref.current.getBoundingClientRect().y - holderOffset) };
   };
 
@@ -90,7 +94,12 @@ const BurgerIngredients = () => {
   );
 };
 
-const toIngredientsSection = (ingredients, name, clickHandler, ref) => {
+const toIngredientsSection = (
+  ingredients: ReadonlyArray<Ingredient>,
+  name: string,
+  clickHandler: (id: string) => void,
+  ref: MutableRefObject<HTMLDivElement | null>
+) => {
   return (
     <div className={`${styles.ingredientSection} pt-10`} key={name} id={name} ref={ref}>
       <p className={`${styles.ingredientType} text text_type_main-medium`}>{name}</p>

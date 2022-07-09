@@ -4,6 +4,7 @@ import { useDrop } from 'react-dnd';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uid } from 'uuid';
 import { useDispatch, useSelector } from '../../hooks';
+import { Ingredient } from '../../models/Ingredient';
 import { addIngredient, removeIngredient, sortIngredients } from '../../services/actions/burger';
 import { takeOrder } from '../../services/thunks/order';
 import BurgerIngredient from '../burger-ingredient/BurgerIngredient';
@@ -13,20 +14,20 @@ const BurgerConstructor = () => {
   const dispatch = useDispatch();
 
   const { ingredients } = useSelector((store) => store.ingredients);
-  const { composition, price, draggedIngredient } = useSelector((store) => store.burger);
+  const { composition, price } = useSelector((store) => store.burger);
   const { user } = useSelector((store) => store.user);
 
   const navigate = useNavigate();
 
   const onAddIngredient = useCallback(
     (id) => {
-      const ingredient = ingredients.find((i) => i._id === id);
+      const ingredient = ingredients.find((i) => i._id === id)!;
       dispatch(addIngredient({ ...ingredient, uniqueId: uid() }));
     },
     [ingredients, dispatch]
   );
 
-  const onRemoveIngredient = (ingredient) => {
+  const onRemoveIngredient = (ingredient: Ingredient) => {
     dispatch(removeIngredient(ingredient));
   };
 
@@ -39,15 +40,15 @@ const BurgerConstructor = () => {
     }
   };
 
-  const onSortIngredients = (dragIdx, dropIdx) => {
+  const onSortIngredients = (dragIdx: number, dropIdx: number) => {
     dispatch(sortIngredients(dragIdx, dropIdx));
   };
 
   const [{ opacity }, target] = useDrop({
     accept: 'ingredient',
-    drop(entity) {
+    drop(entity: Ingredient) {
       if (composition.length > 0 || entity.type === 'bun') {
-        onAddIngredient(entity.id);
+        onAddIngredient(entity._id);
       }
     },
     collect: (monitor) => ({
@@ -73,7 +74,7 @@ const BurgerConstructor = () => {
             <ul className={styles.ingredientList}>
               {composition
                 .slice(1)
-                .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
+                //TODO: .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
                 .map((ingredient, idx) => (
                   <BurgerIngredient
                     key={ingredient.uniqueId}

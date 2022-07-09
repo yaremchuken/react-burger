@@ -13,7 +13,7 @@ export const Feed = () => {
 
   const { wsRequested, wsConnected, orders } = useSelector((store) => store.webSocket);
 
-  const onOrderChoose = (id) => {
+  const onOrderChoose = (id: number) => {
     const pathname = `/feed/${id}`;
     navigate(pathname, { state: { background: { ...location, pathname } } });
   };
@@ -24,7 +24,11 @@ export const Feed = () => {
     }
   }, [wsConnected, wsRequested, dispatch]);
 
-  useEffect(() => () => dispatch(wsConnectionClose()), [dispatch]);
+  useEffect(() => {
+    return () => {
+      dispatch(wsConnectionClose());
+    };
+  }, [dispatch]);
 
   if (!orders) {
     return null;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from '../../hooks';
+import { Ingredient } from '../../models/Ingredient';
 import Loader from '../loader/Loader';
 import styles from './ingredient-details.module.css';
 
@@ -8,7 +9,7 @@ const IngredientDetails = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [ingredient, setIngredient] = useState();
+  const [ingredient, setIngredient] = useState<Ingredient | null>();
 
   const { ingredients } = useSelector((store) => store.ingredients);
 

@@ -1,23 +1,28 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from '../../hooks';
-import { OrderType } from '../../utils/types';
+import { Order } from '../../models/Order';
 import { dateString, getTotal, mapOrderStatus } from '../../utils/utils';
 import styles from './feed-item.module.css';
 
-export const FeedItem = ({ order, withStatus, onClickHandler }) => {
+type FeedItemProps = {
+  order: Order;
+  onClickHandler: () => void;
+  withStatus?: boolean;
+};
+
+export const FeedItem = ({ order, withStatus, onClickHandler }: FeedItemProps) => {
   const { ingredients } = useSelector((store) => store.ingredients);
 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<ReadonlyArray<string>>([]);
 
   const total = () => {
-    return getTotal(order.ingredients.map((id) => ingredients.find((i) => i._id === id)));
+    return getTotal(order.ingredients.map((id) => ingredients.find((i) => i._id === id)!));
   };
 
   useEffect(() => {
     if (order && images.length === 0) {
-      setImages(order.ingredients.map((id) => ingredients.find((i) => i._id === id).image));
+      setImages(order.ingredients.map((id) => ingredients.find((i) => i._id === id)!.image));
     }
   }, [order, images, ingredients]);
 
@@ -74,10 +79,4 @@ export const FeedItem = ({ order, withStatus, onClickHandler }) => {
       </div>
     </li>
   );
-};
-
-FeedItem.propTypes = {
-  order: OrderType.isRequired,
-  withStatus: PropTypes.bool,
-  onClickHandler: PropTypes.func.isRequired,
 };

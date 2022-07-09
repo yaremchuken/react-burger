@@ -1,5 +1,5 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks';
 import { registerUser } from '../../services/thunks/user';
@@ -21,7 +21,7 @@ export const Register = () => {
     }
   }, [user, navigate]);
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(registerUser({ name, email, password }));
   };

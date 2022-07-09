@@ -1,8 +1,11 @@
-export const socketMiddleware = (url, actions) => {
-  return (store) => {
-    let socket = null;
+import { WebSocketActionType } from '../../constants/web-socket';
+import { WEB_SOCKET_ACTIONS } from '../../utils/constants';
 
-    return (next) => (action) => {
+export const socketMiddleware = (url: string, actions: typeof WEB_SOCKET_ACTIONS) => {
+  return (store: any) => {
+    let socket: WebSocket | undefined = undefined;
+
+    return (next: any) => (action: { type: WebSocketActionType; payload: any }) => {
       const { dispatch } = store;
       const { type, payload } = action;
       const { wsInit, wsClose, onOpen, onError, onClose, onMessage, onSend } = actions;

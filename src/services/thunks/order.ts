@@ -4,7 +4,7 @@ import { clearComposition } from '../actions/burger';
 import { takeOrderFailed, takeOrderRequest, takeOrderSuccess } from '../actions/order';
 import { sendTakeOrder } from '../apiService';
 
-export const takeOrder: AppThunk = (ingredients: Array<Ingredient>) => (dispatch: AppDispatch) => {
+export const takeOrder: AppThunk = (ingredients: ReadonlyArray<Ingredient>) => (dispatch: AppDispatch) => {
   dispatch(takeOrderRequest());
 
   sendTakeOrder(ingredients)

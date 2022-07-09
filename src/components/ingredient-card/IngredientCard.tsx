@@ -1,11 +1,15 @@
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import { useDrag } from 'react-dnd';
 import { useSelector } from '../../hooks';
-import { IngredientType } from '../../utils/types';
+import { Ingredient } from '../../models/Ingredient';
 import styles from './ingredient-card.module.css';
 
-const IngredientCard = ({ ingredient, clickHandler }) => {
+type IngredientCardProps = {
+  ingredient: Ingredient;
+  clickHandler: (_id: string) => void;
+};
+
+const IngredientCard = ({ ingredient, clickHandler }: IngredientCardProps) => {
   const { _id, name, image, price, type } = ingredient;
 
   const { composition } = useSelector((store) => store.burger);
@@ -36,11 +40,6 @@ const IngredientCard = ({ ingredient, clickHandler }) => {
       <p className={`text text_type_main-default`}>{name}</p>
     </li>
   );
-};
-
-IngredientCard.propTypes = {
-  ingredient: IngredientType,
-  clickHandler: PropTypes.func.isRequired,
 };
 
 export default IngredientCard;

@@ -4,7 +4,7 @@ import { WebSocketActionType } from '../../constants/web-socket';
 export interface IWsConnectionStartAction {
   readonly type: typeof WebSocketActionType.WS_CONNECTION_START;
   readonly path: string;
-  readonly token: string;
+  readonly token?: string;
 }
 
 export interface IWsConnectionSuccessAction {
@@ -42,7 +42,7 @@ export type TWebSocketActions =
   | IWsGetMessageAction
   | ISendMessageAction;
 
-export const wsConnectionStart = (path: string, token: string): IWsConnectionStartAction => ({
+export const wsConnectionStart = (path: string, token?: string): IWsConnectionStartAction => ({
   type: WebSocketActionType.WS_CONNECTION_START,
   path,
   token,

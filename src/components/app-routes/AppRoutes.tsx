@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { useSelector } from '../../hooks';
+import { LocationState } from '../../models/Location';
 import { Feed } from '../../pages/feed/Feed';
 import { ForgotPassword } from '../../pages/forgot-password/ForgotPassword';
 import { Homepage } from '../../pages/homepage/Homepage';
@@ -17,11 +17,15 @@ import { OrderInfo } from '../order-info/OrderInfo';
 import ProtectedRoute from '../protected-route/ProtectedRoute';
 import UnauthorizedRoute from '../unauthorized-route/UnauthorizedRoute';
 
-export const AppRoutes = ({ closeModals }) => {
+type AppRoutesProps = {
+  closeModals: () => void;
+};
+
+export const AppRoutes = ({ closeModals }: AppRoutesProps) => {
   const { user } = useSelector((store) => store.user);
 
   const location = useLocation();
-  const background = location.state?.background;
+  const background = (location.state as LocationState)?.background;
 
   const route = (
     <Routes location={background ?? location}>
@@ -127,6 +131,4 @@ export const AppRoutes = ({ closeModals }) => {
   return route;
 };
 
-AppRoutes.propTypes = {
-  closeModals: PropTypes.func.isRequired,
-};
+//TODO: Удалить PropTypes

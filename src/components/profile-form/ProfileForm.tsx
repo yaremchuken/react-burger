@@ -1,19 +1,19 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from '../../hooks';
 import { updateUser } from '../../services/thunks/user';
 import styles from './profile-form.module.css';
 
 export const ProfileForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  const [edits, setEdits] = useState([]);
+  const [edits, setEdits] = useState<Array<string>>([]);
 
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const dispath = useDispatch();
 
@@ -26,9 +26,9 @@ export const ProfileForm = () => {
     }
   }, [user, name, setName, setEmail]);
 
-  const updateUserData = (e) => {
+  const updateUserData = (e: SyntheticEvent) => {
     e.preventDefault();
-    const form = { name, email };
+    const form = { name, email, password };
     if (password.length > 0) {
       form.password = password;
     }
@@ -36,12 +36,15 @@ export const ProfileForm = () => {
     setEdits([]);
   };
 
-  const onChangeValueClick = (ref) => {
+  const onChangeValueClick = (ref: MutableRefObject<HTMLInputElement | null>) => {
+    if (!ref.current) {
+      return;
+    }
     if (edits.includes(ref.current.name)) {
-      setEdits(edits.filter((e) => e !== ref.current.name));
+      setEdits(edits.filter((e) => e !== ref.current!.name));
     } else {
       setEdits([...edits, ref.current.name]);
-      setTimeout(() => ref.current.focus(), 0);
+      setTimeout(() => ref.current!.focus(), 0);
     }
   };
 
@@ -53,8 +56,8 @@ export const ProfileForm = () => {
   };
 
   const clearChanges = () => {
-    setName(user.name);
-    setEmail(user.email);
+    setName(user?.name ?? '');
+    setEmail(user?.email ?? '');
     setPassword('');
     setEdits([]);
   };

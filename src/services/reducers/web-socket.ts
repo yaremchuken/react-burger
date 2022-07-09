@@ -6,7 +6,7 @@ type TWebSocketState = {
   wsRequested: boolean;
   wsConnected: boolean;
 
-  orders: ReadonlyArray<Order>;
+  orders: Array<Order>;
   total?: number;
   totalToday?: number;
 };

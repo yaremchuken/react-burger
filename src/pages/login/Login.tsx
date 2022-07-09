@@ -1,15 +1,16 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks';
+import { LocationState } from '../../models/Location';
 import { loginUser } from '../../services/thunks/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import styles from '../shared/shared.module.css';
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,11 +20,11 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate(location.state?.from ?? '/');
+      navigate((location.state as LocationState)?.from ?? '/');
     }
   }, [user, navigate, location]);
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(loginUser({ email, password }));
   };

@@ -1,3 +1,5 @@
+import { Ingredient } from '../models/Ingredient';
+import { User } from '../models/User';
 import {
   ACCESS_TOKEN_COOKIE_PATH,
   API_URL,
@@ -18,27 +20,27 @@ export const fetchIngredients = () => {
   return request(INGREDIENTS_PATH);
 };
 
-export const sendTakeOrder = (ingredients) => {
+export const sendTakeOrder = (ingredients: ReadonlyArray<Ingredient>) => {
   return request(ORDERS_PATH, { ingredients }, 'POST', true);
 };
 
-export const register = (credentials) => {
-  return request(REGISTER_PATH, credentials);
+export const register = (user: User) => {
+  return request(REGISTER_PATH, user);
 };
 
-export const login = (credentials) => {
-  return request(LOGIN_PATH, credentials);
+export const login = (user: User) => {
+  return request(LOGIN_PATH, user);
 };
 
-export const logout = (token) => {
+export const logout = (token: string) => {
   return request(LOGOUT_PATH, { token });
 };
 
-export const forgotPassword = (email) => {
+export const forgotPassword = (email: string) => {
   return request(FORGOT_PASSWORD_PATH, { email });
 };
 
-export const resetPassword = ({ password, token }) => {
+export const resetPassword = (password: string, token: string) => {
   return request(RESET_PASSWORD_PATH, { password, token });
 };
 
@@ -46,11 +48,16 @@ export const getUser = () => {
   return request(USER_PATH, undefined, 'GET', true);
 };
 
-export const patchUser = (user) => {
+export const patchUser = (user: User) => {
   return request(USER_PATH, user, 'PATCH', true);
 };
 
-const request = async (path, body, method, withToken) => {
+const request = async (
+  path: string,
+  body?: any,
+  method: 'GET' | 'POST' | 'PATCH' = 'GET',
+  withToken: boolean = false
+) => {
   let token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
   if (withToken && !token) {
     const tokens = await request(REFRESH_TOKEN_PATH, { refreshToken: localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH) });
@@ -72,7 +79,7 @@ const request = async (path, body, method, withToken) => {
   ).then(checkResponse);
 };
 
-const checkResponse = (response) => {
+const checkResponse = (response: Response) => {
   if (response.ok) {
     return response.json();
   }

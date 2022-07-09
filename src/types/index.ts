@@ -16,6 +16,8 @@ export type TApplicationActions =
   | TUserActions
   | TWebSocketActions;
 
-export type AppThunk<TReturn = void> = ActionCreator<ThunkAction<TReturn, RootState, undefined, TApplicationActions>>;
+export type AppThunk<ReturnType = void> = ActionCreator<
+  ThunkAction<ReturnType, RootState, undefined, TApplicationActions>
+>;
 
 export type AppDispatch = Dispatch<TApplicationActions>;
