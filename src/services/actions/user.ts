@@ -18,7 +18,7 @@ export interface IRegisterUserFailedAction {
 }
 
 export interface ILoginUserRequestAction {
-  readonly type: typeof UserActionType.LOGOUT_USER_REQUEST;
+  readonly type: typeof UserActionType.LOGIN_USER_REQUEST;
 }
 
 export interface ILoginUserSuccessAction {
@@ -72,6 +72,24 @@ export interface IPasswordResetRequestedAction {
   readonly type: typeof UserActionType.PASSWORD_RESET_REQUESTED;
 }
 
+export type TUserActions =
+  | IRegisterUserRequestAction
+  | IRegisterUserSuccessAction
+  | IRegisterUserFailedAction
+  | ILoginUserRequestAction
+  | ILoginUserSuccessAction
+  | ILoginUserFailedAction
+  | ILogoutUserRequestAction
+  | ILogoutUserSuccessAction
+  | ILogoutUserFailedAction
+  | IGetUserRequestAction
+  | IGetUserSuccessAction
+  | IGetUserFailedAction
+  | IUpdateUserRequestAction
+  | IUpdateUserSuccessAction
+  | IUpdateUserFailedAction
+  | IPasswordResetRequestedAction;
+
 export const registerUserRequest = (): IRegisterUserRequestAction => ({
   type: UserActionType.REGISTER_USER_REQUEST,
 });
@@ -86,7 +104,7 @@ export const registerUserFailed = (): IRegisterUserFailedAction => ({
 });
 
 export const loginUserRequest = (): ILoginUserRequestAction => ({
-  type: UserActionType.LOGOUT_USER_REQUEST,
+  type: UserActionType.LOGIN_USER_REQUEST,
 });
 
 export const loginUserSuccess = (user: User): ILoginUserSuccessAction => ({

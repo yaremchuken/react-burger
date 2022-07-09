@@ -21,6 +21,12 @@ export interface IClearOrderNumberAction {
   readonly type: typeof OrderActionType.CLEAR_ORDER_NUMBER;
 }
 
+export type TOrderActions =
+  | ITakeOrderRequestAction
+  | ITakeOrderSuccessAction
+  | ITakeOrderFailedAction
+  | IClearOrderNumberAction;
+
 export const takeOrderRequest = (): ITakeOrderRequestAction => ({
   type: OrderActionType.TAKE_ORDER_REQUEST,
 });

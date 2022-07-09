@@ -33,6 +33,15 @@ export interface ISendMessageAction {
   readonly message: unknown;
 }
 
+export type TWebSocketActions =
+  | IWsConnectionStartAction
+  | IWsConnectionSuccessAction
+  | IWsConnectionErrorAction
+  | IWsConnectionCloseAction
+  | IWsConnectionClosedAction
+  | IWsGetMessageAction
+  | ISendMessageAction;
+
 export const wsConnectionStart = (path: string, token: string): IWsConnectionStartAction => ({
   type: WebSocketActionType.WS_CONNECTION_START,
   path,

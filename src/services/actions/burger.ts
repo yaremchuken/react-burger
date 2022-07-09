@@ -21,6 +21,12 @@ export interface ISortIngredientsAction {
   readonly idxTo: number;
 }
 
+export type TBurgerActions =
+  | IAddIngredientAction
+  | IRemoveIngredientAction
+  | IClearCompositionAction
+  | ISortIngredientsAction;
+
 export const addIngredient = (ingredient: Ingredient): IAddIngredientAction => ({
   type: BurgerActionType.ADD_INGREDIENT,
   ingredient,
