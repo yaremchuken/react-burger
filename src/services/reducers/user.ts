@@ -1,6 +1,6 @@
 import { User } from '../../models/User';
 import { TUserActions } from '../actions/user';
-import { UserActionType } from '../constants/user';
+import { UserActionType } from '../../constants/user';
 
 type TUserState = {
   registerRequested: boolean;

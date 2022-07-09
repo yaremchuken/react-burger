@@ -1,7 +1,7 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from '../../hooks';
 import { resetPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
 

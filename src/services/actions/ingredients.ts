@@ -1,7 +1,5 @@
-import { Dispatch } from 'redux';
+import { IngredientsActionType } from '../../constants/ingredients';
 import { Ingredient } from '../../models/Ingredient';
-import { fetchIngredients } from '../apiService';
-import { IngredientsActionType } from '../constants/ingredients';
 
 export interface IGetIngredientsRequestAction {
   readonly type: typeof IngredientsActionType.GET_INGREDIENTS_REQUEST;
@@ -33,20 +31,3 @@ export const getIngredientsSuccess = (ingredients: Array<Ingredient>): IGetIngre
 export const getIngredientsFailed = (): IGetIngredientsFailedAction => ({
   type: IngredientsActionType.GET_INGREDIENTS_FAILED,
 });
-
-// TODO: перенести куда-нибудь методы!!!
-export const getIngredients = () => {
-  return (dispatch: Dispatch) => {
-    dispatch(getIngredientsRequest());
-
-    fetchIngredients()
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(getIngredientsSuccess(res.data));
-        } else {
-          dispatch(getIngredientsFailed());
-        }
-      })
-      .catch(() => dispatch(getIngredientsFailed()));
-  };
-};

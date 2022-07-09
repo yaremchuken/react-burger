@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks';
 import acceptImg from '../../image/order-accepted.png';
 import styles from './order-details.module.css';
 

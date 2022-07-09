@@ -1,7 +1,7 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from '../../hooks';
 import IngredientCard from '../ingredient-card/IngredientCard';
 import styles from './burger-ingredients.module.css';
 

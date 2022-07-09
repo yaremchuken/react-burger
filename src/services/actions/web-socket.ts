@@ -1,5 +1,5 @@
 import { WsMessage } from '../../models/WsMessage';
-import { WebSocketActionType } from '../constants/web-socket';
+import { WebSocketActionType } from '../../constants/web-socket';
 
 export interface IWsConnectionStartAction {
   readonly type: typeof WebSocketActionType.WS_CONNECTION_START;
@@ -30,7 +30,7 @@ export interface IWsGetMessageAction {
 
 export interface ISendMessageAction {
   readonly type: typeof WebSocketActionType.WS_SEND_MESSAGE;
-  readonly message: unknown;
+  readonly message: any;
 }
 
 export type TWebSocketActions =
@@ -69,8 +69,8 @@ export const wsGetMessage = (message: WsMessage): IWsGetMessageAction => ({
   message,
 });
 
-//TODO: Убрать все unknown
-export const wsSendMessage = (message: unknown): ISendMessageAction => ({
+//TODO: Убрать все any
+export const wsSendMessage = (message: any): ISendMessageAction => ({
   type: WebSocketActionType.WS_SEND_MESSAGE,
   message,
 });

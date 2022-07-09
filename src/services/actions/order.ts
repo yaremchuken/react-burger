@@ -1,8 +1,4 @@
-import { Dispatch } from 'redux';
-import { Ingredient } from '../../models/Ingredient';
-import { sendTakeOrder } from '../apiService';
-import { OrderActionType } from '../constants/order';
-import { clearComposition } from './burger';
+import { OrderActionType } from '../../constants/order';
 
 export interface ITakeOrderRequestAction {
   readonly type: typeof OrderActionType.TAKE_ORDER_REQUEST;
@@ -43,20 +39,3 @@ export const takeOrderFailed = (): ITakeOrderFailedAction => ({
 export const clearOrderNumber = (): IClearOrderNumberAction => ({
   type: OrderActionType.CLEAR_ORDER_NUMBER,
 });
-
-export const takeOrder = (ingredients: Array<Ingredient>) => {
-  return (dispatch: Dispatch) => {
-    dispatch(takeOrderRequest());
-
-    sendTakeOrder(ingredients)
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(takeOrderSuccess(res.order.number));
-          dispatch(clearComposition());
-        } else {
-          dispatch(takeOrderFailed());
-        }
-      })
-      .catch(() => dispatch(takeOrderFailed()));
-  };
-};

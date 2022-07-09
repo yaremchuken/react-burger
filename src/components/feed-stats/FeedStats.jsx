@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks';
 import styles from './feed-stats.module.css';
 
 export const FeedStats = () => {

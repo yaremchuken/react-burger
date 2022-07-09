@@ -1,8 +1,8 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUser } from '../../services/actions/user';
+import { useDispatch, useSelector } from '../../hooks';
+import { registerUser } from '../../services/thunks/user';
 import styles from '../shared/shared.module.css';
 
 export const Register = () => {

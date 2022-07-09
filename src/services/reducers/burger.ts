@@ -1,6 +1,6 @@
 import { Ingredient } from '../../models/Ingredient';
 import { TBurgerActions } from '../actions/burger';
-import { BurgerActionType } from '../constants/burger';
+import { BurgerActionType } from '../../constants/burger';
 
 type TBurgerState = {
   composition: ReadonlyArray<Ingredient>;

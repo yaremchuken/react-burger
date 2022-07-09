@@ -1,7 +1,7 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../hooks';
 import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { dateString, getCookie, mapOrderStatus } from '../../utils/utils';

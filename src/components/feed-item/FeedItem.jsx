@@ -1,7 +1,7 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks';
 import { OrderType } from '../../utils/types';
 import { dateString, getTotal, mapOrderStatus } from '../../utils/utils';
 import styles from './feed-item.module.css';

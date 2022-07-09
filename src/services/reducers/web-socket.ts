@@ -1,6 +1,6 @@
 import { Order } from '../../models/Order';
 import { TWebSocketActions } from '../actions/web-socket';
-import { WebSocketActionType } from '../constants/web-socket';
+import { WebSocketActionType } from '../../constants/web-socket';
 
 type TWebSocketState = {
   wsRequested: boolean;

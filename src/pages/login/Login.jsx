@@ -1,8 +1,8 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/actions/user';
+import { useDispatch, useSelector } from '../../hooks';
+import { loginUser } from '../../services/thunks/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import styles from '../shared/shared.module.css';

@@ -1,6 +1,6 @@
 import { Ingredient } from '../../models/Ingredient';
 import { TIngredientsActions } from '../actions/ingredients';
-import { IngredientsActionType } from '../constants/ingredients';
+import { IngredientsActionType } from '../../constants/ingredients';
 
 type TIngredientsState = {
   ingredients: ReadonlyArray<Ingredient>;

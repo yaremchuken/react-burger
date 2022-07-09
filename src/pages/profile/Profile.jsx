@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FeedItem } from '../../components/feed-item/FeedItem';
 import { ProfileForm } from '../../components/profile-form/ProfileForm';
-import { logoutUser } from '../../services/actions/user';
+import { useDispatch, useSelector } from '../../hooks';
 import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
+import { logoutUser } from '../../services/thunks/user';
 import { ACCESS_TOKEN_COOKIE_PATH, REFRESH_TOKEN_LOCAL_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import styles from './profile.module.css';

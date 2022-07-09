@@ -1,5 +1,5 @@
 import { TOrderActions } from '../actions/order';
-import { OrderActionType } from '../constants/order';
+import { OrderActionType } from '../../constants/order';
 
 type TOrderState = {
   orderRequested: boolean;

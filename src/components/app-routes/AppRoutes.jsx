@@ -1,21 +1,21 @@
-import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { useSelector } from '../../hooks';
+import { Feed } from '../../pages/feed/Feed';
 import { ForgotPassword } from '../../pages/forgot-password/ForgotPassword';
 import { Homepage } from '../../pages/homepage/Homepage';
 import { Ingredients } from '../../pages/ingredients/Ingredients';
 import { Login } from '../../pages/login/Login';
 import { NotFound } from '../../pages/not-found/NotFound';
+import { Order } from '../../pages/order/Order';
 import { Profile } from '../../pages/profile/Profile';
 import { Register } from '../../pages/register/Register';
 import { ResetPassword } from '../../pages/reset-password/ResetPassword';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import Modal from '../modal/Modal';
+import { OrderInfo } from '../order-info/OrderInfo';
 import ProtectedRoute from '../protected-route/ProtectedRoute';
 import UnauthorizedRoute from '../unauthorized-route/UnauthorizedRoute';
-import { Feed } from '../../pages/feed/Feed';
-import { Order } from '../../pages/order/Order';
-import { OrderInfo } from '../order-info/OrderInfo';
 
 export const AppRoutes = ({ closeModals }) => {
   const { user } = useSelector((store) => store.user);

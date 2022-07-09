@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getIngredients } from '../../services/actions/ingredients';
+import { useDispatch, useSelector } from '../../hooks';
 import { clearOrderNumber } from '../../services/actions/order';
-import { getUserByToken } from '../../services/actions/user';
+import { getIngredients } from '../../services/thunks/ingredients';
+import { getUserByToken } from '../../services/thunks/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import AppHeader from '../app-header/AppHeader';

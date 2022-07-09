@@ -1,8 +1,5 @@
-import { Dispatch } from 'redux';
+import { UserActionType } from '../../constants/user';
 import { User } from '../../models/User';
-import { dropTokens, persistTokens } from '../../utils/utils';
-import { getUser, login, logout, patchUser, register } from '../apiService';
-import { UserActionType } from '../constants/user';
 
 export interface IRegisterUserRequestAction {
   readonly type: typeof UserActionType.REGISTER_USER_REQUEST;
@@ -157,89 +154,3 @@ export const updateUserFailed = (): IUpdateUserFailedAction => ({
 export const passwordResetRequested = (): IPasswordResetRequestedAction => ({
   type: UserActionType.PASSWORD_RESET_REQUESTED,
 });
-
-export const registerUser = (user: User) => {
-  return (dispatch: Dispatch) => {
-    dispatch(registerUserRequest());
-
-    register(user)
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(registerUserSuccess(res));
-          persistTokens(res.accessToken, res.refreshToken);
-        } else {
-          dispatch(registerUserFailed());
-        }
-      })
-      .catch(() => dispatch(registerUserFailed()));
-  };
-};
-
-export const loginUser = (user: User) => {
-  return (dispatch: Dispatch) => {
-    dispatch(loginUserRequest());
-
-    login(user)
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(loginUserSuccess(res));
-          persistTokens(res.accessToken, res.refreshToken);
-        } else {
-          dispatch(loginUserFailed());
-        }
-      })
-      .catch(() => dispatch(loginUserFailed()));
-  };
-};
-
-export const logoutUser = (refreshToken: string) => {
-  return (dispatch: Dispatch) => {
-    dispatch(logoutUserRequest());
-
-    logout(refreshToken)
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(logoutUserSuccess());
-          dropTokens();
-        } else {
-          dispatch(logoutUserFailed());
-        }
-      })
-      .catch(() => dispatch(logoutUserFailed()));
-  };
-};
-
-//TODO: Убрать отсюда токен!!!
-export const getUserByToken = (token: string) => {
-  return (dispatch: Dispatch) => {
-    dispatch(getUserRequest());
-
-    getUser()
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(getUserSuccess(res.user));
-        } else {
-          dispatch(getUserFailed());
-        }
-      })
-      .catch(() => {
-        dispatch(getUserFailed());
-      });
-  };
-};
-
-export const updateUser = (user: User) => {
-  return (dispatch: Dispatch) => {
-    dispatch(updateUserRequest());
-
-    patchUser(user)
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(updateUserSuccess(res.user));
-        } else {
-          dispatch(updateUserFailed());
-        }
-      })
-      .catch(() => dispatch(updateUserFailed()));
-  };
-};

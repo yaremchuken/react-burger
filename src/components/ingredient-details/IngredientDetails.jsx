@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from '../../hooks';
 import Loader from '../loader/Loader';
 import styles from './ingredient-details.module.css';
 

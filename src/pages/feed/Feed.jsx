@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FeedItem } from '../../components/feed-item/FeedItem';
 import { FeedStats } from '../../components/feed-stats/FeedStats';
+import { useDispatch, useSelector } from '../../hooks';
 import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
 import styles from './feed.module.css';
 

@@ -1,7 +1,7 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateUser } from '../../services/actions/user';
+import { useDispatch, useSelector } from '../../hooks';
+import { updateUser } from '../../services/thunks/user';
 import styles from './profile-form.module.css';
 
 export const ProfileForm = () => {

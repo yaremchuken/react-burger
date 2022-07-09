@@ -1,5 +1,5 @@
 import { Ingredient } from '../../models/Ingredient';
-import { BurgerActionType } from '../constants/burger';
+import { BurgerActionType } from '../../constants/burger';
 
 export interface IAddIngredientAction {
   readonly type: typeof BurgerActionType.ADD_INGREDIENT;

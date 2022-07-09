@@ -1,7 +1,7 @@
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks';
 import { IngredientType } from '../../utils/types';
 import styles from './ingredient-card.module.css';
 

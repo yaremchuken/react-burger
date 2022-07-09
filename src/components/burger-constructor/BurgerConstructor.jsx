@@ -1,11 +1,11 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uid } from 'uuid';
+import { useDispatch, useSelector } from '../../hooks';
 import { addIngredient, removeIngredient, sortIngredients } from '../../services/actions/burger';
-import { takeOrder } from '../../services/actions/order';
+import { takeOrder } from '../../services/thunks/order';
 import BurgerIngredient from '../burger-ingredient/BurgerIngredient';
 import styles from './burger-constructor.module.css';
 
