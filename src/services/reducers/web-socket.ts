@@ -50,12 +50,12 @@ export const webSocketReducer = (state = initialState, action: TWebSocketActions
     }
 
     case WebSocketActionType.WS_GET_MESSAGE: {
-      const { message } = action;
+      const { payload } = action;
       return {
         ...state,
-        orders: message.orders,
-        total: message.total,
-        totalToday: message.totalToday,
+        orders: payload.orders,
+        total: payload.total,
+        totalToday: payload.totalToday,
       };
     }
 

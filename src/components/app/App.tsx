@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks';
 import { clearOrderNumber } from '../../services/actions/order';
 import { getIngredients } from '../../services/thunks/ingredients';
-import { getUserByToken } from '../../services/thunks/user';
+import { fetchUser } from '../../services/thunks/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
 import AppHeader from '../app-header/AppHeader';
@@ -23,11 +23,8 @@ const App = () => {
   const { user } = useSelector((store) => store.user);
 
   useEffect(() => {
-    if (!user) {
-      const token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
-      if (token) {
-        dispatch(getUserByToken(token));
-      }
+    if (!user && getCookie(ACCESS_TOKEN_COOKIE_PATH)) {
+      dispatch(fetchUser());
     }
   }, [user, dispatch]);
 

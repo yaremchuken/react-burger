@@ -8,9 +8,9 @@ export const setCookie = (name: string, value: string, lifetimeSecs: number) => 
   document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
 };
 
-export const getCookie = (name: string) => {
+export const getCookie = (name: string): string | undefined => {
   const cookies = document.cookie.split(';');
-  let value = '';
+  let value;
   cookies.forEach((cookie) => {
     const split = cookie.split('=');
     if (split[0] === name) {

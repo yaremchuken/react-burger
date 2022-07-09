@@ -2,7 +2,7 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../hooks';
-import { IngredientType } from '../../models/Ingredient';
+import { Ingredient, IngredientType } from '../../models/Ingredient';
 import { Order } from '../../models/Order';
 import { wsConnectionClose, wsConnectionStart } from '../../services/actions/web-socket';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
@@ -18,7 +18,7 @@ export const OrderInfo = () => {
   const dispatch = useDispatch();
 
   const [order, setOrder] = useState<Order | null>(null);
-  const [composition, setComposition] = useState<ReadonlyArray<any>>([]);
+  const [composition, setComposition] = useState<ReadonlyArray<{ ingredient: Ingredient; count: number }>>([]);
 
   const total = () => {
     return composition.map((i) => i.ingredient.price * i.count).reduce((res, pr) => (res += pr), 0);
@@ -27,12 +27,11 @@ export const OrderInfo = () => {
   useEffect(() => {
     if (!wsConnected && !wsRequested) {
       const profile = location.pathname.startsWith('/profile');
-      dispatch(
-        wsConnectionStart(
-          profile ? '' : '/all',
-          profile ? getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', '') : undefined
-        )
-      );
+      let token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
+      if (token) {
+        token = token.replace('Bearer ', '');
+      }
+      dispatch(wsConnectionStart(profile ? '' : '/all', profile ? token : undefined));
     }
   }, [wsConnected, wsRequested, dispatch, location]);
 
@@ -55,9 +54,11 @@ export const OrderInfo = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(wsConnectionClose());
+      if (wsConnected) {
+        dispatch(wsConnectionClose());
+      }
     };
-  }, [dispatch]);
+  }, [wsConnected, dispatch]);
 
   if (!order) {
     return null;

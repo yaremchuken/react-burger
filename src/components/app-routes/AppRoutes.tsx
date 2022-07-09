@@ -130,5 +130,3 @@ export const AppRoutes = ({ closeModals }: AppRoutesProps) => {
 
   return route;
 };
-
-//TODO: Удалить PropTypes

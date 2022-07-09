@@ -27,15 +27,21 @@ export const Profile = () => {
 
   useEffect(() => {
     if (!wsConnected && !wsRequested) {
-      dispatch(wsConnectionStart('', getCookie(ACCESS_TOKEN_COOKIE_PATH).replace('Bearer ', '')));
+      let token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
+      if (token) {
+        token = token.replace('Bearer ', '');
+      }
+      dispatch(wsConnectionStart('', token));
     }
   }, [wsConnected, wsRequested, dispatch]);
 
   useEffect(() => {
     return () => {
-      dispatch(wsConnectionClose());
+      if (wsConnected) {
+        dispatch(wsConnectionClose());
+      }
     };
-  }, [dispatch]);
+  }, [wsConnected, dispatch]);
 
   return (
     <div className={styles.profile}>

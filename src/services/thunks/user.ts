@@ -41,7 +41,7 @@ export const loginUser: AppThunk = (user: User) => (dispatch: AppDispatch) => {
   login(user)
     .then((res) => {
       if (res && res.success) {
-        dispatch(loginUserSuccess(res));
+        dispatch(loginUserSuccess(res.user));
         persistTokens(res.accessToken, res.refreshToken);
       } else {
         dispatch(loginUserFailed());
@@ -65,8 +65,7 @@ export const logoutUser: AppThunk = (refreshToken: string) => (dispatch: AppDisp
     .catch(() => dispatch(logoutUserFailed()));
 };
 
-//TODO: Убрать отсюда токен!!!
-export const getUserByToken: AppThunk = (token: string) => (dispatch: AppDispatch) => {
+export const fetchUser: AppThunk = () => (dispatch: AppDispatch) => {
   dispatch(getUserRequest());
 
   getUser()

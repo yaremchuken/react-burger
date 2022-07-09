@@ -25,12 +25,12 @@ export interface IWsConnectionClosedAction {
 
 export interface IWsGetMessageAction {
   readonly type: typeof WebSocketActionType.WS_GET_MESSAGE;
-  readonly message: WsMessage;
+  readonly payload: WsMessage;
 }
 
 export interface ISendMessageAction {
   readonly type: typeof WebSocketActionType.WS_SEND_MESSAGE;
-  readonly message: any;
+  readonly payload: any;
 }
 
 export type TWebSocketActions =
@@ -64,13 +64,12 @@ export const wsConnectionClosed = (): IWsConnectionClosedAction => ({
   type: WebSocketActionType.WS_CONNECTION_CLOSED,
 });
 
-export const wsGetMessage = (message: WsMessage): IWsGetMessageAction => ({
+export const wsGetMessage = (payload: WsMessage): IWsGetMessageAction => ({
   type: WebSocketActionType.WS_GET_MESSAGE,
-  message,
+  payload,
 });
 
-//TODO: Убрать все any
-export const wsSendMessage = (message: any): ISendMessageAction => ({
+export const wsSendMessage = (payload: any): ISendMessageAction => ({
   type: WebSocketActionType.WS_SEND_MESSAGE,
-  message,
+  payload,
 });

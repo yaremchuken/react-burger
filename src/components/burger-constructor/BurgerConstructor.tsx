@@ -72,18 +72,15 @@ const BurgerConstructor = () => {
             <p className={`${styles.empty} text text_type_main-medium`}>Теперь добавляйте ингредиенты</p>
           ) : (
             <ul className={styles.ingredientList}>
-              {composition
-                .slice(1)
-                //TODO: .filter((i) => !draggedIngredient || draggedIngredient._id !== i._id)
-                .map((ingredient, idx) => (
-                  <BurgerIngredient
-                    key={ingredient.uniqueId}
-                    ingredient={ingredient}
-                    idx={idx}
-                    closeHandler={() => onRemoveIngredient(ingredient)}
-                    sortHandler={onSortIngredients}
-                  />
-                ))}
+              {composition.slice(1).map((ingredient, idx) => (
+                <BurgerIngredient
+                  key={ingredient.uniqueId}
+                  ingredient={ingredient}
+                  idx={idx}
+                  closeHandler={() => onRemoveIngredient(ingredient)}
+                  sortHandler={onSortIngredients}
+                />
+              ))}
             </ul>
           )}
 

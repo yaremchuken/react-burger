@@ -52,17 +52,14 @@ export const patchUser = (user: User) => {
   return request(USER_PATH, user, 'PATCH', true);
 };
 
-const request = async (
-  path: string,
-  body?: any,
-  method: 'GET' | 'POST' | 'PATCH' = 'GET',
-  withToken: boolean = false
-) => {
+const request = async (path: string, body?: any, method?: 'GET' | 'POST' | 'PATCH', withToken: boolean = false) => {
   let token = getCookie(ACCESS_TOKEN_COOKIE_PATH);
   if (withToken && !token) {
-    const tokens = await request(REFRESH_TOKEN_PATH, { refreshToken: localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH) });
-    persistTokens(token, tokens.refreshToken);
+    const tokens: { accessToken: string; refreshToken: string } = await request(REFRESH_TOKEN_PATH, {
+      refreshToken: localStorage.getItem(REFRESH_TOKEN_LOCAL_PATH),
+    });
     token = tokens.accessToken;
+    persistTokens(token, tokens.refreshToken);
   }
 
   return fetch(
@@ -76,7 +73,9 @@ const request = async (
       },
       body: body && JSON.stringify(body),
     }
-  ).then(checkResponse);
+  )
+    .then(checkResponse)
+    .catch((e: Error) => console.log(e));
 };
 
 const checkResponse = (response: Response) => {

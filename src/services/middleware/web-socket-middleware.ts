@@ -1,18 +1,19 @@
+import { Dispatch } from 'redux';
 import { WebSocketActionType } from '../../constants/web-socket';
 import { WEB_SOCKET_ACTIONS } from '../../utils/constants';
 
 export const socketMiddleware = (url: string, actions: typeof WEB_SOCKET_ACTIONS) => {
-  return (store: any) => {
+  return (store: { dispatch: Dispatch }) => {
     let socket: WebSocket | undefined = undefined;
 
-    return (next: any) => (action: { type: WebSocketActionType; payload: any }) => {
+    return (next: any) => (action: { type: WebSocketActionType; path: string; token?: string }) => {
       const { dispatch } = store;
-      const { type, payload } = action;
+      const { type, path, token } = action;
       const { wsInit, wsClose, onOpen, onError, onClose, onMessage, onSend } = actions;
 
       if (type === wsInit) {
-        const path = url + (payload?.path ?? '') + (payload?.token ? '?token=' + payload.token : '');
-        socket = new WebSocket(path);
+        const address = url + (path ?? '') + (token ? '?token=' + token : '');
+        socket = new WebSocket(address);
       }
 
       if (socket) {
@@ -33,7 +34,7 @@ export const socketMiddleware = (url: string, actions: typeof WEB_SOCKET_ACTIONS
           if (result.success) {
             dispatch({ type: onMessage, payload: result });
           } else {
-            throw new Error(`Unable to aquire messages from web socket!`);
+            throw new Error(`Unable to aquire messages from web socket: ${result.message}`);
           }
         };
 

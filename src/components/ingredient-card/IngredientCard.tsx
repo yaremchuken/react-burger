@@ -21,7 +21,7 @@ const IngredientCard = ({ ingredient, clickHandler }: IngredientCardProps) => {
 
   const [{ opacity }, ref] = useDrag({
     type: 'ingredient',
-    item: { id: _id, type },
+    item: { _id, type },
     collect: (monitor) => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),

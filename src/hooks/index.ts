@@ -4,6 +4,3 @@ import { AppDispatch, AppThunk, RootState } from '../types';
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 
 export const useDispatch: () => AppDispatch | AppThunk = dispatchHook;
-//TODO: export const useDispatch = () => dispatchHook<AppDispatch | AppThunk>();
-
-// export const useLocation: () => Location = locationHook;

@@ -26,9 +26,11 @@ export const Feed = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(wsConnectionClose());
+      if (wsConnected) {
+        dispatch(wsConnectionClose());
+      }
     };
-  }, [dispatch]);
+  }, [wsConnected, dispatch]);
 
   if (!orders) {
     return null;
