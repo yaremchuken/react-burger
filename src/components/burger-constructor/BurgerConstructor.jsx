@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uid } from 'uuid';
-import { ADD_INGREDIENT, REMOVE_INGREDIENT, SORT_INGREDIENTS } from '../../services/actions/burger';
+import { addIngredient, removeIngredient, sortIngredients } from '../../services/actions/burger';
 import { takeOrder } from '../../services/actions/order';
 import BurgerIngredient from '../burger-ingredient/BurgerIngredient';
 import styles from './burger-constructor.module.css';
@@ -18,16 +18,16 @@ const BurgerConstructor = () => {
 
   const navigate = useNavigate();
 
-  const addIngredient = useCallback(
+  const onAddIngredient = useCallback(
     (id) => {
       const ingredient = ingredients.find((i) => i._id === id);
-      dispatch({ type: ADD_INGREDIENT, ingredient: { ...ingredient, uniqueId: uid() } });
+      dispatch(addIngredient({ ...ingredient, uniqueId: uid() }));
     },
     [ingredients, dispatch]
   );
 
-  const removeIngredient = (ingredient) => {
-    dispatch({ type: REMOVE_INGREDIENT, ingredient });
+  const onRemoveIngredient = (ingredient) => {
+    dispatch(removeIngredient(ingredient));
   };
 
   const orderHandler = () => {
@@ -39,15 +39,15 @@ const BurgerConstructor = () => {
     }
   };
 
-  const sortIngredients = (dragIdx, dropIdx) => {
-    dispatch({ type: SORT_INGREDIENTS, idxFrom: dragIdx, idxTo: dropIdx });
+  const onSortIngredients = (dragIdx, dropIdx) => {
+    dispatch(sortIngredients(dragIdx, dropIdx));
   };
 
   const [{ opacity }, target] = useDrop({
     accept: 'ingredient',
     drop(entity) {
       if (composition.length > 0 || entity.type === 'bun') {
-        addIngredient(entity.id);
+        onAddIngredient(entity.id);
       }
     },
     collect: (monitor) => ({
@@ -79,8 +79,8 @@ const BurgerConstructor = () => {
                     key={ingredient.uniqueId}
                     ingredient={ingredient}
                     idx={idx}
-                    closeHandler={() => removeIngredient(ingredient)}
-                    sortHandler={sortIngredients}
+                    closeHandler={() => onRemoveIngredient(ingredient)}
+                    sortHandler={onSortIngredients}
                   />
                 ))}
             </ul>

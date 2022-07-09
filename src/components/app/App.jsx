@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getIngredients } from '../../services/actions/ingredients';
-import { CLEAR_ORDER_NUMBER } from '../../services/actions/order';
+import { clearOrderNumber } from '../../services/actions/order';
 import { getUserByToken } from '../../services/actions/user';
 import { ACCESS_TOKEN_COOKIE_PATH } from '../../utils/constants';
 import { getCookie } from '../../utils/utils';
@@ -38,7 +38,7 @@ const App = () => {
   }, [ingredients, dispatch]);
 
   const closeModals = () => {
-    dispatch({ type: CLEAR_ORDER_NUMBER });
+    dispatch(clearOrderNumber());
     navigate(-1);
   };
 
