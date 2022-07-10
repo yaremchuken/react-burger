@@ -9,14 +9,17 @@ export interface IWsConnectionStartAction {
 
 export interface IWsConnectionSuccessAction {
   readonly type: typeof WebSocketActionType.WS_CONNECTION_SUCCESS;
+  readonly event: Event;
 }
 
 export interface IWsConnectionErrorAction {
   readonly type: typeof WebSocketActionType.WS_CONNECTION_ERROR;
+  readonly event: Event;
 }
 
 export interface IWsConnectionCloseAction {
   readonly type: typeof WebSocketActionType.WS_CONNECTION_CLOSE;
+  readonly event?: Event;
 }
 
 export interface IWsConnectionClosedAction {
@@ -48,16 +51,19 @@ export const wsConnectionStart = (path: string, token?: string): IWsConnectionSt
   token,
 });
 
-export const wsConnectionSuccess = (): IWsConnectionSuccessAction => ({
+export const wsConnectionSuccess = (event: Event): IWsConnectionSuccessAction => ({
   type: WebSocketActionType.WS_CONNECTION_SUCCESS,
+  event,
 });
 
-export const wsConnectionError = (): IWsConnectionErrorAction => ({
+export const wsConnectionError = (event: Event): IWsConnectionErrorAction => ({
   type: WebSocketActionType.WS_CONNECTION_ERROR,
+  event,
 });
 
-export const wsConnectionClose = (): IWsConnectionCloseAction => ({
+export const wsConnectionClose = (event?: Event): IWsConnectionCloseAction => ({
   type: WebSocketActionType.WS_CONNECTION_CLOSE,
+  event,
 });
 
 export const wsConnectionClosed = (): IWsConnectionClosedAction => ({

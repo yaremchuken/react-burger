@@ -1,48 +1,54 @@
-import { Dispatch } from 'redux';
+import { Middleware, MiddlewareAPI } from 'redux';
 import { WebSocketActionType } from '../../constants/web-socket';
-import { WEB_SOCKET_ACTIONS } from '../../utils/constants';
+import { AppDispatch, RootState } from '../../types';
+import {
+  wsConnectionClose,
+  wsConnectionError,
+  wsConnectionSuccess,
+  wsGetMessage,
+  wsSendMessage,
+} from './/../actions/web-socket';
 
-export const socketMiddleware = (url: string, actions: typeof WEB_SOCKET_ACTIONS) => {
-  return (store: { dispatch: Dispatch }) => {
+export const socketMiddleware = (url: string): Middleware => {
+  return (store: MiddlewareAPI<AppDispatch, RootState>) => {
     let socket: WebSocket | undefined = undefined;
 
     return (next: any) => (action: { type: WebSocketActionType; path: string; token?: string }) => {
       const { dispatch } = store;
       const { type, path, token } = action;
-      const { wsInit, wsClose, onOpen, onError, onClose, onMessage, onSend } = actions;
 
-      if (type === wsInit) {
+      if (type === WebSocketActionType.WS_CONNECTION_START) {
         const address = url + (path ?? '') + (token ? '?token=' + token : '');
         socket = new WebSocket(address);
       }
 
       if (socket) {
         socket.onopen = (event) => {
-          dispatch({ type: onOpen, payload: event });
+          dispatch(wsConnectionSuccess(event));
         };
 
         socket.onerror = (event) => {
-          dispatch({ type: onError, payload: event });
+          dispatch(wsConnectionError(event));
         };
 
         socket.onclose = (event) => {
-          dispatch({ type: onClose, payload: event });
+          dispatch(wsConnectionClose(event));
         };
 
         socket.onmessage = (event) => {
-          const result = JSON.parse(event.data);
-          if (result.success) {
-            dispatch({ type: onMessage, payload: result });
+          const message = JSON.parse(event.data);
+          if (message.success) {
+            dispatch(wsGetMessage(message));
           } else {
-            throw new Error(`Unable to aquire messages from web socket: ${result.message}`);
+            throw new Error(`Unable to aquire messages from web socket: ${message.message}`);
           }
         };
 
         socket.send = (event) => {
-          dispatch({ type: onSend, payload: event });
+          dispatch(wsSendMessage(event));
         };
 
-        if (type === wsClose && socket.readyState === WebSocket.OPEN) {
+        if (type === WebSocketActionType.WS_CONNECTION_CLOSE && socket.readyState === WebSocket.OPEN) {
           socket.close();
         }
       }

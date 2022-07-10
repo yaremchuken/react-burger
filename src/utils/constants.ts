@@ -1,5 +1,3 @@
-import { WebSocketActionType } from '../constants/web-socket';
-
 export const API_URL = 'https://norma.nomoreparties.space/api';
 export const WEB_SOCKET_URL = 'wss://norma.nomoreparties.space/orders';
 
@@ -19,13 +17,3 @@ export const REFRESH_TOKEN_LOCAL_PATH = 'react-burger.refresh-token';
 
 export const ACCESS_TOKEN_COOKIE_PATH = 'react-burger.access-token';
 export const ACCESS_TOKEN_LIFETIME = 20 * 60;
-
-export const WEB_SOCKET_ACTIONS = {
-  wsInit: WebSocketActionType.WS_CONNECTION_START,
-  wsClose: WebSocketActionType.WS_CONNECTION_CLOSE,
-  onOpen: WebSocketActionType.WS_CONNECTION_SUCCESS,
-  onError: WebSocketActionType.WS_CONNECTION_ERROR,
-  onClose: WebSocketActionType.WS_CONNECTION_CLOSED,
-  onMessage: WebSocketActionType.WS_GET_MESSAGE,
-  onSend: WebSocketActionType.WS_SEND_MESSAGE,
-};
