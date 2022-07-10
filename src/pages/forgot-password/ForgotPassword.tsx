@@ -1,7 +1,7 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { SyntheticEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from '../../hooks';
 import { passwordResetRequested } from '../../services/actions/user';
 import { forgotPassword } from '../../services/apiService';
 import styles from '../shared/shared.module.css';
